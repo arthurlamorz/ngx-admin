@@ -29,6 +29,11 @@ export interface Callback {
     callbackWithParam(result: any): void;
 }
 
+export class CognitoResponse {
+    message: string;
+    result: any;
+}
+
 @Injectable()
 export class CognitoUtil {
 

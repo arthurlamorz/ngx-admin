@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import {
   NbAbstractAuthProvider,
   NbAuthResult,
-  NbAuthSimpleToken,
 } from '@nebular/auth';
 import { Observable } from 'rxjs/Observable';
+import { UserLoginService } from '../services/user-login.service';
 
 export interface UserData {
+  email: string;
   username: string;
   password: string;
 }
@@ -22,15 +22,16 @@ export interface AuthConfig {
   apiAddress: string;
 }
 
+
 @Injectable()
-export class AwsCognitoAuthProvider  extends NbAbstractAuthProvider {
+export class AwsCognitoAuthProvider extends NbAbstractAuthProvider {
   protected defaultConfig: AuthConfig = {
     apiAddress: 'http://example.com/accesstoken',
   };
   protected config: AuthConfig;
 
   constructor(
-    private httpClient: HttpClient,
+    public loginService: UserLoginService,
   ) {
     super();
   }
@@ -47,44 +48,8 @@ export class AwsCognitoAuthProvider  extends NbAbstractAuthProvider {
   }
 
   authenticate(user: UserData): Observable<NbAuthResult> {
-    const headers: HttpHeaders = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-    const body = `grant_type=password&username=${user.username}&password=${user.password}`;
-
-    return this.httpClient.post<TokenResponse>(
-      this.config.apiAddress,
-      body, {
-        headers,
-      },
-    )
-    .map((res: TokenResponse) => {
-      const token = new NbAuthSimpleToken();
-      token.setValue(res.access_token);
-
-      return new NbAuthResult(
-        true,
-        res,
-        '/',
-        false,
-        `Sign in successful!`,
-        token,
-      );
-    })
-    .catch((res) => {
-      let errors = [];
-      if (res instanceof HttpErrorResponse) {
-        errors = ['Wrong combination of username/password.'];
-      } else {
-        errors.push('Something went wrong.');
-      }
-
-      return Observable.of(
-        new NbAuthResult(
-          false,
-          res,
-          null,
-          errors,
-        ));
-    });
+    const self = this;
+    return self.loginService.authenticate(user.email, user.password);
   }
 
   getConfigValue(key: string) {

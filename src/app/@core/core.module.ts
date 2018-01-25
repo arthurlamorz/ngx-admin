@@ -1,6 +1,9 @@
 import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NbAuthModule, NbDummyAuthProvider } from '@nebular/auth';
+import { AwsCognitoAuthProvider } from '../auth/aws-cognito.provider';
+import { UserLoginService } from '../services/user-login.service';
+import { CognitoUtil } from '../services/cognito.service';
 
 import { throwIfAlreadyLoaded } from './module-import-guard';
 import { DataModule } from './data/data.module';
@@ -11,7 +14,7 @@ const NB_CORE_PROVIDERS = [
   ...NbAuthModule.forRoot({
     providers: {
       email: {
-        service: NbDummyAuthProvider,
+        service: AwsCognitoAuthProvider,
         config: {
           delay: 3000,
           login: {
@@ -43,6 +46,9 @@ export class CoreModule {
       ngModule: CoreModule,
       providers: [
         ...NB_CORE_PROVIDERS,
+        AwsCognitoAuthProvider,
+        UserLoginService,
+        CognitoUtil
       ],
     };
   }

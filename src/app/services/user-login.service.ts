@@ -5,6 +5,8 @@ import {CognitoCallback, CognitoUtil, LoggedInCallback} from './cognito.service'
 import {AuthenticationDetails, CognitoUser} from 'amazon-cognito-identity-js';
 import * as AWS from 'aws-sdk/global';
 import * as STS from 'aws-sdk/clients/sts';
+import { NbAuthResult } from '@nebular/auth';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class UserLoginService {
@@ -12,7 +14,7 @@ export class UserLoginService {
     constructor(/*public ddb: DynamoDBService,*/ public cognitoUtil: CognitoUtil) {
     }
 
-    authenticate(username: string, password: string, callback: CognitoCallback) {
+    authenticate(username: string, password: string): Observable<NbAuthResult> {
         // console.log("UserLoginService: starting the authentication")
 
         const authenticationData = {
@@ -30,40 +32,50 @@ export class UserLoginService {
         const cognitoUser = new CognitoUser(userData);
         // console.log("UserLoginService: config is " + AWS.config);
         const self = this;
-        cognitoUser.authenticateUser(authenticationDetails, {
-            newPasswordRequired: function (userAttributes, requiredAttributes) {
-                callback.cognitoCallback(`User needs to set password.`, null);
-            },
-            onSuccess: function (result) {
 
-                // console.log("In authenticateUser onSuccess callback");
+        var observable = new Observable<NbAuthResult>(obs => {
 
-                const creds = self.cognitoUtil.buildCognitoCreds(result.getIdToken().getJwtToken());
+            cognitoUser.authenticateUser(authenticationDetails, {
+                newPasswordRequired: function (userAttributes, requiredAttributes) {
+                    obs.next( new NbAuthResult (false, null, null, [new Error('User needs to set password.')], ['User needs to set password.'], null))
+                },
+                onSuccess: function (result) {
 
-                AWS.config.credentials = creds;
+                    // console.log("In authenticateUser onSuccess callback");
 
-                // So, when CognitoIdentity authenticates a user, it doesn't actually hand us the IdentityID,
-                // used by many of our other handlers. This is handled by some sly underhanded calls to AWS Cognito
-                // API's by the SDK itself, automatically when the first AWS SDK request is made that requires our
-                // security credentials. The identity is then injected directly into the credentials object.
-                // If the first SDK call we make wants to use our IdentityID, we have a
-                // chicken and egg problem on our hands. We resolve this problem by "priming" the AWS SDK by calling a
-                // very innocuous API call that forces this behavior.
-                const clientParams: any = {};
-                if (environment.sts_endpoint) {
-                    clientParams.endpoint = environment.sts_endpoint;
-                }
-                const sts = new STS(clientParams);
-                sts.getCallerIdentity(function (err, data) {
-                    // console.log("UserLoginService: Successfully set the AWS credentials");
-                    callback.cognitoCallback(null, result);
-                });
+                    const creds = self.cognitoUtil.buildCognitoCreds(result.getIdToken().getJwtToken());
 
-            },
-            onFailure: function (err) {
-                callback.cognitoCallback(err.message, null);
-            },
+                    AWS.config.credentials = creds;
+
+                    // So, when CognitoIdentity authenticates a user, it doesn't actually hand us the IdentityID,
+                    // used by many of our other handlers. This is handled by some sly underhanded calls to AWS Cognito
+                    // API's by the SDK itself, automatically when the first AWS SDK request is made that requires our
+                    // security credentials. The identity is then injected directly into the credentials object.
+                    // If the first SDK call we make wants to use our IdentityID, we have a
+                    // chicken and egg problem on our hands.
+                    // We resolve this problem by "priming" the AWS SDK by calling a
+                    // very innocuous API call that forces this behavior.
+                    const clientParams: any = {};
+                    if (environment.sts_endpoint) {
+                        clientParams.endpoint = environment.sts_endpoint;
+                    }
+                    const sts = new STS(clientParams);
+                    sts.getCallerIdentity(function (err, data) {
+                        // console.log("UserLoginService: Successfully set the AWS credentials");
+                        obs.next( new NbAuthResult (true, data, '/', null, null, null))
+
+                    });
+
+                },
+                onFailure: function (err) {
+                    obs.next( new NbAuthResult (false, err, null, [err], [err.message], null))
+                },
+            });
+
         });
+
+        return observable;
+       
     }
 
     forgotPassword(username: string, callback: CognitoCallback) {
