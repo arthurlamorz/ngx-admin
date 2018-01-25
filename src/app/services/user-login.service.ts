@@ -33,11 +33,16 @@ export class UserLoginService {
         // console.log("UserLoginService: config is " + AWS.config);
         const self = this;
 
-        var observable = new Observable<NbAuthResult>(obs => {
+        const observable = new Observable<NbAuthResult>(obs => {
 
             cognitoUser.authenticateUser(authenticationDetails, {
                 newPasswordRequired: function (userAttributes, requiredAttributes) {
-                    obs.next( new NbAuthResult (false, null, null, [new Error('User needs to set password.')], ['User needs to set password.'], null))
+                    obs.next( new NbAuthResult (
+                        false,
+                        null,
+                        null,
+                        [new Error('User needs to set password.')],
+                        ['User needs to set password.'], null))
                 },
                 onSuccess: function (result) {
 
@@ -75,7 +80,7 @@ export class UserLoginService {
         });
 
         return observable;
-       
+
     }
 
     forgotPassword(username: string, callback: CognitoCallback) {

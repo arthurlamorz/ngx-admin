@@ -1,6 +1,6 @@
 import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NbAuthModule, NbDummyAuthProvider } from '@nebular/auth';
+import { NbAuthModule } from '@nebular/auth';
 import { AwsCognitoAuthProvider } from '../auth/aws-cognito.provider';
 import { UserLoginService } from '../services/user-login.service';
 import { CognitoUtil } from '../services/cognito.service';
@@ -48,7 +48,7 @@ export class CoreModule {
         ...NB_CORE_PROVIDERS,
         AwsCognitoAuthProvider,
         UserLoginService,
-        CognitoUtil
+        CognitoUtil,
       ],
     };
   }
