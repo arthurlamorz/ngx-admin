@@ -1,8 +1,8 @@
 import {Inject, Injectable} from '@angular/core';
-import {CognitoCallback, CognitoUtil} from './cognito.service';
+import {CognitoCallback, CognitoUtil, UserData, NewPasswordUser} from './cognito.service';
 import {AuthenticationDetails, CognitoUser, CognitoUserAttribute} from 'amazon-cognito-identity-js';
-import {RegistrationUser} from '../auth/registration.component';
-import {NewPasswordUser} from '../auth/newpassword.component';
+import { NbAuthResult } from '@nebular/auth';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class UserRegistrationService {
@@ -11,7 +11,7 @@ export class UserRegistrationService {
 
     }
 
-    register(user: RegistrationUser, callback: CognitoCallback): void {
+    register(user: UserData): Observable<NbAuthResult> {
         // console.log('UserRegistrationService: user is ' + user);
 
         const attributeList = [];
@@ -27,15 +27,18 @@ export class UserRegistrationService {
         attributeList.push(new CognitoUserAttribute(dataEmail));
         attributeList.push(new CognitoUserAttribute(dataNickname));
 
-        this.cognitoUtil.getUserPool().signUp(user.email, user.password, attributeList, null, function (err, result) {
-            if (err) {
-                callback.cognitoCallback(err.message, null);
-            } else {
-                // console.log('UserRegistrationService: registered user is ' + result);
-                callback.cognitoCallback(null, result);
-            }
+        const observable = new Observable<NbAuthResult>(obs => {
+            this.cognitoUtil.getUserPool().signUp(user.email, user.password, attributeList, null, function (err, result) {
+                if (err) {
+                    obs.next(new NbAuthResult(false, null, null, [err], [err.message]));
+                } else {
+                    // console.log('UserRegistrationService: registered user is ' + result);
+                    obs.next(new NbAuthResult(true, result, '/', null, null ))
+                }
+            });
         });
 
+        return observable;
     }
 
     confirmRegistration(username: string, confirmationCode: string, callback: CognitoCallback): void {

@@ -5,12 +5,9 @@ import {
 } from '@nebular/auth';
 import { Observable } from 'rxjs/Observable';
 import { UserLoginService } from '../services/user-login.service';
+import { UserRegistrationService } from '../services/user-registration.service';
+import { UserData } from '../services/cognito.service';
 
-export interface UserData {
-  email: string;
-  username: string;
-  password: string;
-}
 
 export interface TokenResponse {
   access_token: string;
@@ -32,6 +29,7 @@ export class AwsCognitoAuthProvider extends NbAbstractAuthProvider {
 
   constructor(
     public loginService: UserLoginService,
+    public registrationService: UserRegistrationService,
   ) {
     super();
   }
@@ -56,7 +54,8 @@ export class AwsCognitoAuthProvider extends NbAbstractAuthProvider {
     return this.config[key];
   }
   register(data?: UserData): Observable<NbAuthResult> {
-    throw new Error('Method not implemented.');
+   const self = this;
+   return self.registrationService.register(data);
   }
   requestPassword(data?: UserData): Observable<NbAuthResult> {
     throw new Error('Method not implemented.');

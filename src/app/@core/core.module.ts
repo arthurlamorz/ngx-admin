@@ -8,6 +8,7 @@ import { CognitoUtil } from '../services/cognito.service';
 import { throwIfAlreadyLoaded } from './module-import-guard';
 import { DataModule } from './data/data.module';
 import { AnalyticsService } from './utils/analytics.service';
+import { UserRegistrationService } from '../services/user-registration.service';
 
 const NB_CORE_PROVIDERS = [
   ...DataModule.forRoot().providers,
@@ -48,6 +49,7 @@ export class CoreModule {
         ...NB_CORE_PROVIDERS,
         AwsCognitoAuthProvider,
         UserLoginService,
+        UserRegistrationService,
         CognitoUtil,
       ],
     };

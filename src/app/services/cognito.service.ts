@@ -24,6 +24,22 @@ export interface LoggedInCallback {
     isLoggedIn(message: string, loggedIn: boolean): void;
 }
 
+export interface UserData {
+    email: string;
+    username: string;
+    password: string;
+    name: string;
+    phonenumber: string;
+    address: string;
+    website: string;
+  }
+
+export interface NewPasswordUser {
+    username: string;
+    existingPassword: string;
+    password: string;
+}
+
 export interface Callback {
     callback(): void;
     callbackWithParam(result: any): void;
