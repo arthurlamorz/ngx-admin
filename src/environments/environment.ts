@@ -10,11 +10,11 @@
 
 export const environment = {
   production: false,
-  region: 'us-east-1',
+  region: 'ap-northeast-1',
 
-  identityPoolId: 'us-east-1:fbe0340f-9ffc-4449-a935-bb6a6661fd53',
-  userPoolId: 'us-east-1_PGSbCVZ7S',
-  clientId: 'hh5ibv67so0qukt55c5ulaltk',
+  identityPoolId: 'ap-northeast-1:b7b4c70f-40bb-48e5-aa89-e1d97da050dc',
+  userPoolId: 'ap-northeast-1_ZDFO8ejOi',
+  clientId: '4qk4jla0i29j1dhkh8ck9g1ics',
 
   cognito_idp_endpoint: '',
   cognito_identity_endpoint: '',
