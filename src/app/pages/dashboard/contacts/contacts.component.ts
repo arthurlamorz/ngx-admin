@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NbThemeService, NbMediaBreakpoint, NbMediaBreakpointsService } from '@nebular/theme';
-
+import { CognitoUtil, Callback } from '../../../services/cognito.service'
 import { UserService } from '../../../@core/data/users.service';
 
 @Component({
@@ -18,7 +18,8 @@ export class ContactsComponent implements OnInit, OnDestroy {
 
   constructor(private userService: UserService,
               private themeService: NbThemeService,
-              private breakpointService: NbMediaBreakpointsService) {
+              private breakpointService: NbMediaBreakpointsService,
+              private cognitoUtil: CognitoUtil) {
 
     this.breakpoints = this.breakpointService.getBreakpointsMap();
     this.themeSubscription = this.themeService.onMediaQueryChange()
@@ -28,6 +29,14 @@ export class ContactsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
+
+    this.cognitoUtil.observeIdToken()
+      .subscribe(result => {
+        alert(result);
+      }, error => {
+        alert(error.message);
+      });
 
     this.userService.getUsers()
       .subscribe((users: any) => {

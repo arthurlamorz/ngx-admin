@@ -1,5 +1,5 @@
-import {Injectable} from '@angular/core';
-import {environment} from '../../environments/environment';
+import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 import {
     // AuthenticationDetails,
     // CognitoIdentityServiceProvider,
@@ -10,6 +10,7 @@ import {
 import * as AWS from 'aws-sdk/global';
 import * as awsservice from 'aws-sdk/lib/service';
 import * as CognitoIdentity from 'aws-sdk/clients/cognitoidentity';
+import { Observable } from 'rxjs/Observable';
 
 
 /**
@@ -32,7 +33,7 @@ export interface UserData {
     phonenumber: string;
     address: string;
     website: string;
-  }
+}
 
 export interface NewPasswordUser {
     username: string;
@@ -121,7 +122,7 @@ export class CognitoUtil {
 
     getAccessToken(callback: Callback): void {
         if (callback == null) {
-            throw(new Error ('CognitoUtil: callback in getAccessToken is null...returning'));
+            throw (new Error('CognitoUtil: callback in getAccessToken is null...returning'));
         }
         if (this.getCurrentUser() != null)
             this.getCurrentUser().getSession(function (err, session) {
@@ -138,9 +139,34 @@ export class CognitoUtil {
             callback.callbackWithParam(null);
     }
 
+    observeIdToken(): Observable<string> {
+
+        const observable = new Observable<string>(
+            obs => {
+                if (this.getCurrentUser() != null)
+                    this.getCurrentUser().getSession(function (err, session) {
+                        if (err) {
+                            // console.log("CognitoUtil: Can't set the credentials:" + err);
+                            obs.error(err);
+                        } else {
+                            if (session.isValid()) {
+                                obs.next(session.getIdToken().getJwtToken());
+                            } else {
+                                // console.log("CognitoUtil: Got the id token, but the session isn't valid");
+                                obs.error(new Error('CognitoUtil: Got the id token, but the session isn\'t valid'));
+                            }
+                        }
+                    });
+                else
+                    obs.error(new Error('CognitoUtil: No current user'))
+            });
+
+        return observable;
+    }
+
     getIdToken(callback: Callback): void {
         if (callback == null) {
-            throw(new Error('CognitoUtil: callback in getIdToken is null...returning'));
+            throw (new Error('CognitoUtil: callback in getIdToken is null...returning'));
         }
         if (this.getCurrentUser() != null)
             this.getCurrentUser().getSession(function (err, session) {
@@ -161,7 +187,7 @@ export class CognitoUtil {
 
     getRefreshToken(callback: Callback): void {
         if (callback == null) {
-            throw(new Error('CognitoUtil: callback in getRefreshToken is null...returning'));
+            throw (new Error('CognitoUtil: callback in getRefreshToken is null...returning'));
         }
         if (this.getCurrentUser() != null)
             this.getCurrentUser().getSession(function (err, session) {
