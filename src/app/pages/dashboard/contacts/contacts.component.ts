@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NbThemeService, NbMediaBreakpoint, NbMediaBreakpointsService } from '@nebular/theme';
-import { CognitoUtil, Callback } from '../../../services/cognito.service'
+import { CognitoUtil } from '../../../services/cognito.service'
 import { UserService } from '../../../@core/data/users.service';
 
 @Component({
