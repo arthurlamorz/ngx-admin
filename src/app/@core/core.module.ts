@@ -9,6 +9,7 @@ import { throwIfAlreadyLoaded } from './module-import-guard';
 import { DataModule } from './data/data.module';
 import { AnalyticsService } from './utils/analytics.service';
 import { UserRegistrationService } from '../services/user-registration.service';
+import { CognitoAuthInterceptor } from '../services/interceptors/cognito.http.interceptor';
 
 const NB_CORE_PROVIDERS = [
   ...DataModule.forRoot().providers,
@@ -51,6 +52,7 @@ export class CoreModule {
         UserLoginService,
         UserRegistrationService,
         CognitoUtil,
+        CognitoAuthInterceptor,
       ],
     };
   }

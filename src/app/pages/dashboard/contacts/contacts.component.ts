@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NbThemeService, NbMediaBreakpoint, NbMediaBreakpointsService } from '@nebular/theme';
-import { CognitoUtil } from '../../../services/cognito.service'
 import { UserService } from '../../../@core/data/users.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'ngx-contacts',
@@ -17,9 +17,9 @@ export class ContactsComponent implements OnInit, OnDestroy {
   themeSubscription: any;
 
   constructor(private userService: UserService,
-              private themeService: NbThemeService,
-              private breakpointService: NbMediaBreakpointsService,
-              private cognitoUtil: CognitoUtil) {
+    private themeService: NbThemeService,
+    private breakpointService: NbMediaBreakpointsService,
+    private http: HttpClient) {
 
     this.breakpoints = this.breakpointService.getBreakpointsMap();
     this.themeSubscription = this.themeService.onMediaQueryChange()
@@ -30,34 +30,31 @@ export class ContactsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-
-    this.cognitoUtil.observeIdToken()
-      .subscribe(result => {
-        alert(result);
-      }, error => {
-        alert(error.message);
-      });
-
+    this.http.get('https://api.goblin-software.com/languagedev/Silvertooth/en')
+      .subscribe(
+      data => {},
+      err => alert(JSON.stringify(err)),
+    );
     this.userService.getUsers()
       .subscribe((users: any) => {
         this.contacts = [
-          {user: users.nick, type: 'mobile'},
-          {user: users.eva, type: 'home'},
-          {user: users.jack, type: 'mobile'},
-          {user: users.lee, type: 'mobile'},
-          {user: users.alan, type: 'home'},
-          {user: users.kate, type: 'work'},
+          { user: users.nick, type: 'mobile' },
+          { user: users.eva, type: 'home' },
+          { user: users.jack, type: 'mobile' },
+          { user: users.lee, type: 'mobile' },
+          { user: users.alan, type: 'home' },
+          { user: users.kate, type: 'work' },
         ];
 
         this.recent = [
-          {user: users.alan, type: 'home', time: '9:12 pm'},
-          {user: users.eva, type: 'home', time: '7:45 pm'},
-          {user: users.nick, type: 'mobile', time: '5:29 pm'},
-          {user: users.lee, type: 'mobile', time: '11:24 am'},
-          {user: users.jack, type: 'mobile', time: '10:45 am'},
-          {user: users.kate, type: 'work', time: '9:42 am'},
-          {user: users.kate, type: 'work', time: '9:31 am'},
-          {user: users.jack, type: 'mobile', time: '8:01 am'},
+          { user: users.alan, type: 'home', time: '9:12 pm' },
+          { user: users.eva, type: 'home', time: '7:45 pm' },
+          { user: users.nick, type: 'mobile', time: '5:29 pm' },
+          { user: users.lee, type: 'mobile', time: '11:24 am' },
+          { user: users.jack, type: 'mobile', time: '10:45 am' },
+          { user: users.kate, type: 'work', time: '9:42 am' },
+          { user: users.kate, type: 'work', time: '9:31 am' },
+          { user: users.jack, type: 'mobile', time: '8:01 am' },
         ];
       });
   }

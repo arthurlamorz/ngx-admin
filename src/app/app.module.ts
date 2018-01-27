@@ -8,12 +8,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CoreModule } from './@core/core.module';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ThemeModule } from './@theme/theme.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CognitoAuthInterceptor } from './services/interceptors/cognito.http.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -30,6 +32,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
   bootstrap: [AppComponent],
   providers: [
     { provide: APP_BASE_HREF, useValue: '/' },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: CognitoAuthInterceptor,
+      multi: true,
+    },
   ],
 })
 export class AppModule {
