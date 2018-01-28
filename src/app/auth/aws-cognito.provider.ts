@@ -4,9 +4,9 @@ import {
   NbAuthResult,
 } from '@nebular/auth';
 import { Observable } from 'rxjs/Observable';
-import { UserLoginService } from '../services/user-login.service';
-import { UserRegistrationService } from '../services/user-registration.service';
-import { UserData } from '../services/cognito.service';
+import { UserLoginService } from '../services/cognito-services/user-login.service';
+import { UserRegistrationService } from '../services/cognito-services/user-registration.service';
+import { UserData } from '../services/cognito-services/cognito.service';
 
 
 export interface TokenResponse {

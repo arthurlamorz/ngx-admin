@@ -1,4 +1,4 @@
-import {environment} from '../../environments/environment';
+import {environment} from '../../../environments/environment';
 import {Injectable} from '@angular/core';
 // import {DynamoDBService} from "./ddb.service";
 import {CognitoCallback, CognitoUtil, LoggedInCallback} from './cognito.service';

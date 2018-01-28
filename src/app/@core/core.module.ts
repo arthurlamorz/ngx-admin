@@ -2,13 +2,13 @@ import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core
 import { CommonModule } from '@angular/common';
 import { NbAuthModule } from '@nebular/auth';
 import { AwsCognitoAuthProvider } from '../auth/aws-cognito.provider';
-import { UserLoginService } from '../services/user-login.service';
-import { CognitoUtil } from '../services/cognito.service';
+import { UserLoginService } from '../services/cognito-services/user-login.service';
+import { CognitoUtil } from '../services/cognito-services/cognito.service';
 
 import { throwIfAlreadyLoaded } from './module-import-guard';
 import { DataModule } from './data/data.module';
 import { AnalyticsService } from './utils/analytics.service';
-import { UserRegistrationService } from '../services/user-registration.service';
+import { UserRegistrationService } from '../services/cognito-services/user-registration.service';
 import { CognitoAuthInterceptor } from '../services/interceptors/cognito.http.interceptor';
 
 const NB_CORE_PROVIDERS = [

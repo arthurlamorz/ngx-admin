@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { CognitoUtil } from '../cognito.service';
+import { CognitoUtil } from '../cognito-services/cognito.service';
 import 'rxjs/add/operator/mergeMap';
 
 @Injectable()
