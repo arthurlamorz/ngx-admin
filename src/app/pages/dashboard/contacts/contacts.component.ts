@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NbThemeService, NbMediaBreakpoint, NbMediaBreakpointsService } from '@nebular/theme';
 import { UserService } from '../../../@core/data/users.service';
-import { AppDetail, AppListService } from '../../../services/cms-services/list-app.service';
+import { AppListService } from '../../../services/cms-services/list-app.service';
 
 @Component({
   selector: 'ngx-contacts',
@@ -36,9 +36,9 @@ export class ContactsComponent implements OnInit, OnDestroy {
           alert(JSON.stringify(app))
         });
       });
-      
 
-    
+
+
     this.userService.getUsers()
       .subscribe((users: any) => {
         this.contacts = [
