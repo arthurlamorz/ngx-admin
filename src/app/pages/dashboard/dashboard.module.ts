@@ -3,6 +3,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
 
 import { ThemeModule } from '../../@theme/theme.module';
 import { DashboardComponent } from './dashboard.component';
+import { AppCardComponent } from './app-card/app-card.component';
 import { StatusCardComponent } from './status-card/status-card.component';
 import { ContactsComponent } from './contacts/contacts.component';
 import { RoomsComponent } from './rooms/rooms.component';
@@ -28,6 +29,7 @@ import { TrafficChartComponent } from './traffic/traffic-chart.component';
   ],
   declarations: [
     DashboardComponent,
+    AppCardComponent,
     StatusCardComponent,
     TemperatureDraggerComponent,
     ContactsComponent,
