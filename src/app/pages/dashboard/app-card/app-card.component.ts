@@ -17,7 +17,7 @@ import { AppListService, AppList } from '../../../services/cms-services/list-app
       <div class="details">
         <div class="title">{{ item.appName }}</div>
         <div class="status">ON</div>
-      </div> 
+      </div>
     </nb-card>
     </div>
   </div>

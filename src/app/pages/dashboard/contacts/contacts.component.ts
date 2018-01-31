@@ -17,7 +17,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
 
   constructor(private userService: UserService,
     private themeService: NbThemeService,
-    private breakpointService: NbMediaBreakpointsService,) {
+    private breakpointService: NbMediaBreakpointsService) {
 
     this.breakpoints = this.breakpointService.getBreakpointsMap();
     this.themeSubscription = this.themeService.onMediaQueryChange()
