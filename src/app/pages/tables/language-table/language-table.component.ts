@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LocalDataSource } from 'ng2-smart-table';
 
-import { SmartTableService } from '../../../@core/data/smart-table.service';
 import { LanguageService } from '../../../services/cms-services/language.service';
 
 @Component({
@@ -44,7 +43,7 @@ export class LanguageTableComponent implements OnInit {
 
   source: LocalDataSource = new LocalDataSource();
 
-  constructor(private service: SmartTableService,
+  constructor(
     private languageService: LanguageService,
   ) {
 
