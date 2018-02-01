@@ -43,6 +43,8 @@ export class AppCardComponent implements OnInit {
       .subscribe(al => {
         if (al)
           self.appList = al;
+      }, error => {
+        
       });
 
 

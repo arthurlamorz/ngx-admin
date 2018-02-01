@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 
+import { environment } from '../../../environments/environment';
+
 export interface AppList {
     appList: AppDetail[]
 }
@@ -21,11 +23,11 @@ export class AppListService {
     listApp(): Observable<AppList> {
         const observable = new Observable<AppList>(
             obs => {
-                this.http.get('https://api.goblin-software.com/cms')
+                this.http.get(environment.service_base_url +  environment.service_applist_endpoint)
                 .subscribe(resp => {
                     obs.next(resp as AppList);
                 }, error => {
-                    alert(JSON.stringify(error.message));
+                    obs.error(JSON.stringify(error.message));
                 });
             },
         );
