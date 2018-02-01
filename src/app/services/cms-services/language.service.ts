@@ -30,12 +30,32 @@ export interface Value {
     value: string;
 }
 
+export interface LanguageList {
+    languages: string[];
+}
+
 
 @Injectable()
 export class LanguageService {
 
     constructor( private http: HttpClient) {
     }
+
+    getlanguageList(appId: string): Observable<LanguageList> {
+        const observable = new Observable<LanguageList>(
+            obs => {
+                this.http.get(environment.service_base_url + environment.service_language_endpoint
+                    + '/' + appId)
+                .subscribe(resp => {
+                    obs.next(resp as LanguageList);
+                }, error => {
+                    obs.error(JSON.stringify(error.message));
+                });
+            },
+        );
+        return observable;
+    }
+
 
     getLanguage(appId: string, languageCode: string): Observable<LanguageDetails> {
         const observable = new Observable<LanguageDetails>(

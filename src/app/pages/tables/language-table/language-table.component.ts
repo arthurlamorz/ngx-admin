@@ -5,15 +5,15 @@ import { SmartTableService } from '../../../@core/data/smart-table.service';
 import { LanguageService } from '../../../services/cms-services/language.service';
 
 @Component({
-  selector: 'ngx-smart-table',
-  templateUrl: './smart-table.component.html',
+  selector: 'ngx-language-table',
+  templateUrl: './language-table.component.html',
   styles: [`
-    nb-card {
+    nb-card {ß
       transform: translate3d(0, 0, 0);
     }
   `],
 })
-export class SmartTableComponent implements OnInit {
+export class LanguageTableComponent implements OnInit {
 
   settings = {
     add: {
@@ -31,29 +31,13 @@ export class SmartTableComponent implements OnInit {
       confirmDelete: true,
     },
     columns: {
-      id: {
-        title: 'ID',
+      key: {
+        title: 'Key',
         type: 'number',
       },
-      firstName: {
-        title: 'First Name',
+      value: {
+        title: 'Text',
         type: 'string',
-      },
-      lastName: {
-        title: 'Last Name',
-        type: 'string',
-      },
-      username: {
-        title: 'Username',
-        type: 'string',
-      },
-      email: {
-        title: 'E-mail',
-        type: 'string',
-      },
-      age: {
-        title: 'Age',
-        type: 'number',
       },
     },
   };
@@ -63,15 +47,14 @@ export class SmartTableComponent implements OnInit {
   constructor(private service: SmartTableService,
     private languageService: LanguageService,
   ) {
-    const data = this.service.getData();
-    this.source.load(data);
+
   }
 
   ngOnInit(): void {
     const self = this;
-    self.languageService.getLanguage('Silvertooth', 'en')
+    self.languageService.getLanguage('Silvertooth', 'zh-HANT')
       .subscribe(r => {
-        alert(JSON.stringify(r));
+        self.source.load(r.mappings)
       }, error => {
         alert(JSON.stringify(error));
       });
