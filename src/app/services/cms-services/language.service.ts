@@ -72,4 +72,28 @@ export class LanguageService {
         return observable;
 
     }
+
+    createLanguagePair(
+        appId: string,
+        languageCode: string,
+        key: string,
+        value: string): Observable<string> {
+
+            const self = this;
+
+            return new Observable<string>(
+                obs => {
+                    self.http.post(environment.service_base_url + environment.service_language_endpoint
+                        + '/' + appId + '/' + languageCode + '/' + key,
+                        {
+                            value: value,
+                        })
+                        .subscribe(
+                            result => obs.next(''),
+                            error => obs.error(JSON.stringify(error)),
+                        );
+                },
+            );
+
+        }
 }

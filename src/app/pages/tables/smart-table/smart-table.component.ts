@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { LocalDataSource } from 'ng2-smart-table';
 
 import { SmartTableService } from '../../../@core/data/smart-table.service';
-import { LanguageService } from '../../../services/cms-services/language.service';
 
 @Component({
   selector: 'ngx-smart-table',
@@ -13,7 +12,7 @@ import { LanguageService } from '../../../services/cms-services/language.service
     }
   `],
 })
-export class SmartTableComponent implements OnInit {
+export class SmartTableComponent {
 
   settings = {
     add: {
@@ -61,28 +60,11 @@ export class SmartTableComponent implements OnInit {
   source: LocalDataSource = new LocalDataSource();
 
   constructor(private service: SmartTableService,
-    private languageService: LanguageService,
   ) {
     const data = this.service.getData();
     this.source.load(data);
   }
 
-  ngOnInit(): void {
-    const self = this;
-    self.languageService.getLanguage('Silvertooth', 'en')
-      .subscribe(r => {
-        alert(JSON.stringify(r));
-      }, error => {
-        alert(JSON.stringify(error));
-      });
-
-    self.languageService.getlanguageList('Silvertooth')
-      .subscribe(r => {
-        alert(JSON.stringify(r));
-      }, error => {
-        alert(JSON.stringify(error));
-      });
-  }
   onDeleteConfirm(event): void {
     if (window.confirm('Are you sure you want to delete?')) {
       event.confirm.resolve();
