@@ -44,7 +44,7 @@ export class AppCardComponent implements OnInit {
         if (al)
           self.appList = al;
       }, error => {
-        
+
       });
 
 
