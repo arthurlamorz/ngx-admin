@@ -1,141 +1,64 @@
 @import '../../../@theme/styles/themes';
-@import '~@nebular/theme/styles/global/bootstrap/hero-buttons';
 
 @include nb-install-component() {
-  nb-card {
-    flex-direction: row;
-    align-items: center;
-    height: 6rem;
-    overflow: visible;
 
-    $bevel: btn-hero-bevel(nb-theme(card-bg));
-    $shadow: nb-theme(btn-hero-shadow);
-    box-shadow: $bevel, $shadow;
+  nb-card-body {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+  }
 
-    .icon-container {
-      height: 100%;
-      padding: 0.625rem;
-    }
+  .picture {
+    background-position: center;
+    background-size: cover;
+    position: relative;
+    border-top-left-radius: nb-theme(card-border-radius);
+    border-top-right-radius: nb-theme(card-border-radius);
+    flex: 1;
+  }
 
-    .icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 5.75rem;
-      height: 4.75rem;
-      font-size: 3.75rem;
-      border-radius: nb-theme(card-border-radius);
-      transition: width 0.4s ease;
-      transform: translate3d(0, 0, 0);
-      -webkit-transform-style: preserve-3d;
-      -webkit-backface-visibility: hidden;
-      color: nb-theme(color-white);
-
-      &.primary {
-        @include btn-hero-primary-gradient();
-        @include btn-hero-primary-bevel-glow-shadow();
-      }
-      &.success {
-        @include btn-hero-success-gradient();
-        @include btn-hero-success-bevel-glow-shadow();
-      }
-      &.info {
-        @include btn-hero-info-gradient();
-        @include btn-hero-info-bevel-glow-shadow();
-      }
-      &.warning {
-        @include btn-hero-warning-gradient();
-        @include btn-hero-warning-bevel-glow-shadow();
-      }
-    }
-
-    &:hover {
-      background: lighten(nb-theme(card-bg), 5%);
-
-      .icon {
-        &.primary {
-          background-image: btn-hero-primary-light-gradient();
-        }
-        &.success {
-          background-image: btn-hero-success-light-gradient();
-        }
-        &.info {
-          background-image: btn-hero-info-light-gradient();
-        }
-        &.warning {
-          background-image: btn-hero-warning-light-gradient();
-        }
-      }
-    }
-
-    &.off {
-      color: nb-theme(card-fg);
-
-      .icon {
-        color: nb-theme(card-fg);
-
-        &.primary, &.success, &.info, &.warning {
-          box-shadow: none;
-          background-image: linear-gradient(to right, transparent, transparent);
-        }
-      }
-
-      .title {
-        color: nb-theme(card-fg);
-      }
-    }
-
-    .details {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      height: 100%;
-      padding: 0 0.5rem 0 0.75rem;
-      border-left: 1px solid transparent;
-    }
+  .details {
+    padding: 1.25rem 1.25rem 0;
 
     .title {
       font-family: nb-theme(font-secondary);
-      font-size: 1.25rem;
       font-weight: nb-theme(font-weight-bold);
-      color: nb-theme(card-fg-heading);
+      color: nb-theme(color-fg-heading);
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+
+      @include nb-for-theme(cosmic) {
+        font-weight: nb-theme(font-weight-bolder);
+      }
     }
 
-    .status {
-      font-size: 1rem;
+    .description {
+      text-align: justify;
+      color: nb-theme(color-fg-text);
       font-weight: nb-theme(font-weight-light);
-      text-transform: uppercase;
-      color: nb-theme(card-fg);
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-height: calc(1rem * 8 * #{nb-theme(line-height)});
     }
   }
 
-  @include nb-for-theme(cosmic) {
-    nb-card {
-      &.off .icon-container {
-        border-right: 1px solid nb-theme(separator);
+  nb-card-footer {
+    display: flex;
+    justify-content: space-around;
+    padding: 0.75rem 0;
+    border: none;
+
+    a {
+      text-decoration: none;
+      color: nb-theme(color-fg);
+
+      &:hover {
+        color: nb-theme(color-fg-heading);
       }
 
-      .icon-container {
-        padding: 0;
-      }
-
-      .details {
-        padding-left: 1.25rem;
-      }
-
-      .icon {
-        width: 7rem;
-        height: 100%;
-        font-size: 4.5rem;
-        border-radius: nb-theme(card-border-radius) 0 0 nb-theme(card-border-radius);
-      }
-
-      .title {
-        font-weight: nb-theme(font-weight-bolder);
-      }
-
-      .status {
-        font-weight: nb-theme(font-weight-light);
+      i {
+        font-size: 1.75rem;
       }
     }
   }
