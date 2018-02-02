@@ -25,7 +25,7 @@ export class AppListService {
                 .subscribe(resp => {
                     obs.next(resp as AppList);
                 }, error => {
-                    alert(JSON.stringify(error.message));
+                    obs.error(error);
                 });
             },
         );

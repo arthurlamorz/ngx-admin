@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { NgxEchartsModule } from 'ngx-echarts';
+import { ToasterModule } from 'angular2-toaster';
 
 import { ThemeModule } from '../../@theme/theme.module';
 import { DashboardComponent } from './dashboard.component';
@@ -26,6 +27,7 @@ import { TrafficChartComponent } from './traffic/traffic-chart.component';
   imports: [
     ThemeModule,
     NgxEchartsModule,
+    ToasterModule,
   ],
   declarations: [
     DashboardComponent,
