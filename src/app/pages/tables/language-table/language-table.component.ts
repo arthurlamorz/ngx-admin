@@ -57,8 +57,8 @@ export class LanguageTableComponent implements OnInit {
     self.languageService.getlanguageList('Silvertooth')
       .subscribe(r => {
         const languageDetails: Observable<LanguageDetails>[] = [];
-        var settings = JSON.parse(JSON.stringify(self.settings));
-        
+        const settings = JSON.parse(JSON.stringify(self.settings));
+
         r.languages.forEach(l => {
           languageDetails.push(self.languageService.getLanguage('Silvertooth', l))
           settings.columns[l] = {
@@ -71,11 +71,11 @@ export class LanguageTableComponent implements OnInit {
 
         const lan = forkJoin(languageDetails);
         lan.subscribe(result => {
-          
-          result.forEach(lan =>{ 
-            alert(JSON.stringify(lan));
+
+          result.forEach(l => {
+            // add data here
           });
-      
+
         }, error => {
           alert(JSON.stringify(error));
         }, () => {
