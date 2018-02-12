@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { LocalDataSource } from 'ng2-smart-table';
 
-import { LanguageService } from '../../../services/cms-services/language.service';
+import { LanguageService, LanguageDetails } from '../../../services/cms-services/language.service';
+import { Observable } from 'rxjs/observable';
+import { forkJoin } from 'rxjs/observable/forkJoin';
 
 @Component({
   selector: 'ngx-language-table',
@@ -36,10 +38,6 @@ export class LanguageTableComponent implements OnInit {
     columns: {
       key: {
         title: 'Key',
-        type: 'number',
-      },
-      value: {
-        title: 'Text',
         type: 'string',
       },
     },
@@ -55,16 +53,34 @@ export class LanguageTableComponent implements OnInit {
 
   ngOnInit(): void {
     const self = this;
-    self.languageService.getLanguage('Silvertooth', 'zh-HANT')
-      .subscribe(r => {
-        self.source.load(r.mappings)
-      }, error => {
-        alert(JSON.stringify(error));
-      });
 
     self.languageService.getlanguageList('Silvertooth')
       .subscribe(r => {
-        alert(JSON.stringify(r));
+        const languageDetails: Observable<LanguageDetails>[] = [];
+        var settings = JSON.parse(JSON.stringify(self.settings));
+        
+        r.languages.forEach(l => {
+          languageDetails.push(self.languageService.getLanguage('Silvertooth', l))
+          settings.columns[l] = {
+            title: l,
+            type: 'string',
+          };
+        });
+        self.settings = settings;
+
+
+        const lan = forkJoin(languageDetails);
+        lan.subscribe(result => {
+          
+          result.forEach(lan =>{ 
+            alert(JSON.stringify(lan));
+          });
+      
+        }, error => {
+          alert(JSON.stringify(error));
+        }, () => {
+          alert('completed!');
+        });
       }, error => {
         alert(JSON.stringify(error));
       });

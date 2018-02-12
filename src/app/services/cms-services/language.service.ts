@@ -48,6 +48,7 @@ export class LanguageService {
                     + '/' + appId)
                 .subscribe(resp => {
                     obs.next(resp as LanguageList);
+                    obs.complete();
                 }, error => {
                     obs.error(JSON.stringify(error.message));
                 });
@@ -64,6 +65,7 @@ export class LanguageService {
                     + '/' + appId + '/' + languageCode)
                 .subscribe(resp => {
                     obs.next(resp as LanguageDetails);
+                    obs.complete();
                 }, error => {
                     obs.error(JSON.stringify(error.message));
                 });
@@ -89,7 +91,9 @@ export class LanguageService {
                             value: value,
                         })
                         .subscribe(
-                            result => obs.next(''),
+                            result => {
+                                obs.next(''); obs.complete()
+                            },
                             error => obs.error(JSON.stringify(error)),
                         );
                 },
