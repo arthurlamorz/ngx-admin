@@ -58,10 +58,10 @@ export class LanguageTableComponent implements OnInit {
         const languageDetails: Observable<LanguageDetails>[] = [];
         const settings = JSON.parse(JSON.stringify(self.settings));
 
-        r.languages.forEach(l => {
-          languageDetails.push(self.languageService.getLanguage('Silvertooth', l))
-          settings.columns[l] = {
-            title: l,
+        r.languages.forEach(lanCode => {
+          languageDetails.push(self.languageService.getLanguage('Silvertooth', lanCode))
+          settings.columns[lanCode] = {
+            title: lanCode,
             type: 'string',
           };
         });
@@ -74,13 +74,12 @@ export class LanguageTableComponent implements OnInit {
 
         }, error => {
           alert(JSON.stringify(error));
-        }, () => {
-          alert('completed!');
         });
       }, error => {
         alert(JSON.stringify(error));
       });
   }
+
   onCreateConfirm(event): void {
     const self = this;
     const languageCode = 'zh-HANT'
