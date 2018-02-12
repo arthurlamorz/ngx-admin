@@ -1,6 +1,7 @@
 
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs/observable';
+import { forkJoin } from 'rxjs/observable/forkjoin';
 import { Injectable } from '@angular/core';
 
 import { environment } from '../../../environments/environment';
@@ -34,6 +35,9 @@ export interface LanguageList {
     languages: string[];
 }
 
+export interface LanguageMappings {
+    key: string;
+}
 
 @Injectable()
 export class LanguageService {
@@ -41,7 +45,7 @@ export class LanguageService {
     constructor( private http: HttpClient) {
     }
 
-    getlanguageList(appId: string): Observable<LanguageList> {
+    getLanguageList(appId: string): Observable<LanguageList> {
         const observable = new Observable<LanguageList>(
             obs => {
                 this.http.get(environment.service_base_url + environment.service_language_endpoint
@@ -73,6 +77,60 @@ export class LanguageService {
         );
         return observable;
 
+    }
+
+    getAllLanguages(appId: string): Observable<LanguageMappings[]> {
+        const self = this;
+        const observable = new Observable<LanguageMappings[]>(
+            obs => {
+                self.getLanguageList(appId).subscribe(
+                    langList => {
+                        const langDetailObvs: Observable<LanguageDetails>[] = [];
+                        let languageMappings: LanguageMappings[] = [];
+                        langList.languages.forEach(l => {
+                            langDetailObvs.push(self.getLanguage(appId, l));
+                        });
+
+
+                        forkJoin(langDetailObvs).subscribe(
+                            langDetails => {
+                                languageMappings = langDetails[0].mappings.map(m => {
+                                    const newMap: LanguageMappings = {
+                                        key: m.key.substring(m.key.indexOf('_') + 1),
+                                    };
+                                    return newMap;
+                                });
+
+                                langDetails.forEach(langMap => {
+                                    languageMappings = langMap.mappings.map(lm => {
+                                        let newMap: LanguageMappings = languageMappings
+                                            .find(m => m.key.substring(m.key.indexOf('_') + 1)
+                                                    === lm.key.substring(lm.key.indexOf('_') + 1));
+
+                                        if (!newMap)
+                                            newMap = {
+                                                key: lm.key,
+                                            };
+
+                                        newMap[langMap.languageCode] = lm.value;
+                                        return newMap;
+                                    });
+                                });
+
+                                obs.next(languageMappings);
+                                obs.complete();
+                            }, error => {
+                                obs.error(error);
+                            });
+
+                    }, error => {
+                        obs.error(error);
+                    },
+                );
+            },
+        );
+
+        return observable;
     }
 
     createLanguagePair(

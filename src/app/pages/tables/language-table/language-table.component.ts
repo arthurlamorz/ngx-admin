@@ -3,7 +3,6 @@ import { LocalDataSource } from 'ng2-smart-table';
 
 import { LanguageService, LanguageDetails } from '../../../services/cms-services/language.service';
 import { Observable } from 'rxjs/observable';
-import { forkJoin } from 'rxjs/observable/forkJoin';
 
 @Component({
   selector: 'ngx-language-table',
@@ -54,7 +53,7 @@ export class LanguageTableComponent implements OnInit {
   ngOnInit(): void {
     const self = this;
 
-    self.languageService.getlanguageList('Silvertooth')
+    self.languageService.getLanguageList('Silvertooth')
       .subscribe(r => {
         const languageDetails: Observable<LanguageDetails>[] = [];
         const settings = JSON.parse(JSON.stringify(self.settings));
@@ -69,12 +68,9 @@ export class LanguageTableComponent implements OnInit {
         self.settings = settings;
 
 
-        const lan = forkJoin(languageDetails);
+        const lan = self.languageService.getAllLanguages('Silvertooth');
         lan.subscribe(result => {
-
-          result.forEach(l => {
-            // add data here
-          });
+          self.source.load(result);
 
         }, error => {
           alert(JSON.stringify(error));
