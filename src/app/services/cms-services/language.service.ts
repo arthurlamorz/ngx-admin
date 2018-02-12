@@ -133,6 +133,36 @@ export class LanguageService {
         return observable;
     }
 
+    createAllLanguagePairs (
+        appId: string,
+        languageMappings: LanguageMappings
+    ): Observable<boolean>
+    {
+        return new Observable<boolean> (obs => {
+            const self = this;
+            const key = languageMappings.key;
+            const createLanguageObvs:Observable<string>[] = [];
+    
+            for(var lanCode in languageMappings) {
+                if (lanCode != "key") {
+                    createLanguageObvs.push(
+                        self.createLanguagePair(appId, lanCode, key, languageMappings[lanCode]));
+                }
+            }
+    
+            forkJoin(createLanguageObvs).subscribe(results => {
+    
+            }, error => {
+                obs.error(error);
+            }, () => {
+                obs.next(true);
+                obs.complete();
+            });
+
+        });
+       
+    }
+    
     createLanguagePair(
         appId: string,
         languageCode: string,
@@ -150,7 +180,8 @@ export class LanguageService {
                         })
                         .subscribe(
                             result => {
-                                obs.next(''); obs.complete()
+                                obs.next('');
+                                obs.complete();
                             },
                             error => obs.error(JSON.stringify(error)),
                         );

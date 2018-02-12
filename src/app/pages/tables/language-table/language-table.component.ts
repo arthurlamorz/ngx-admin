@@ -82,9 +82,8 @@ export class LanguageTableComponent implements OnInit {
 
   onCreateConfirm(event): void {
     const self = this;
-    const languageCode = 'zh-HANT'
     self.languageService
-      .createLanguagePair('Silvertooth', languageCode, event.newData.key, event.newData.value)
+      .createAllLanguagePairs('Silvertooth', event.newData)
       .subscribe(result => {
         event.confirm.resolve();
       }, error => {
@@ -92,6 +91,7 @@ export class LanguageTableComponent implements OnInit {
         event.confirm.reject();
       });
   }
+
   onDeleteConfirm(event): void {
     if (window.confirm('Are you sure you want to delete?')) {
       event.confirm.resolve();
