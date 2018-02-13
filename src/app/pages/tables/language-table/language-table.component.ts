@@ -26,6 +26,7 @@ export class LanguageTableComponent implements OnInit {
       editButtonContent: '<i class="nb-edit"></i>',
       saveButtonContent: '<i class="nb-checkmark"></i>',
       cancelButtonContent: '<i class="nb-close"></i>',
+      confirmSave: true,
     },
     delete: {
       deleteButtonContent: '<i class="nb-trash"></i>',
@@ -84,6 +85,19 @@ export class LanguageTableComponent implements OnInit {
     const self = this;
     self.languageService
       .createAllLanguagePairs('Silvertooth', event.newData)
+      .subscribe(result => {
+        event.confirm.resolve();
+      }, error => {
+        alert(JSON.stringify(error));
+        event.confirm.reject();
+      });
+  }
+
+  onEditConfirm(event): void {
+    const self = this;
+
+    self.languageService
+      .updateAllLanguagePairs('Silvertooth', event.newData, event.data)
       .subscribe(result => {
         event.confirm.resolve();
       }, error => {

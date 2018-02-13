@@ -133,25 +133,37 @@ export class LanguageService {
         return observable;
     }
 
+    updateAllLanguagePairs (
+        appId: string,
+        newMappings: LanguageMappings,
+        oldMappings: LanguageMappings,
+    ): Observable<boolean> {
+        const self = this;
+        for (const lanCode in newMappings) {
+            if (newMappings[lanCode] === oldMappings[lanCode] && lanCode !== 'key')
+                delete newMappings[lanCode];
+        }
+        return self.createAllLanguagePairs(appId, newMappings);
+    }
+
     createAllLanguagePairs (
         appId: string,
-        languageMappings: LanguageMappings
-    ): Observable<boolean>
-    {
+        languageMappings: LanguageMappings,
+    ): Observable<boolean> {
         return new Observable<boolean> (obs => {
             const self = this;
             const key = languageMappings.key;
-            const createLanguageObvs:Observable<string>[] = [];
-    
-            for(var lanCode in languageMappings) {
-                if (lanCode != "key") {
+            const createLanguageObvs: Observable<string>[] = [];
+
+            for (const lanCode in languageMappings) {
+                if (lanCode !== 'key') {
                     createLanguageObvs.push(
                         self.createLanguagePair(appId, lanCode, key, languageMappings[lanCode]));
                 }
             }
-    
+
             forkJoin(createLanguageObvs).subscribe(results => {
-    
+
             }, error => {
                 obs.error(error);
             }, () => {
@@ -160,9 +172,9 @@ export class LanguageService {
             });
 
         });
-       
+
     }
-    
+
     createLanguagePair(
         appId: string,
         languageCode: string,
