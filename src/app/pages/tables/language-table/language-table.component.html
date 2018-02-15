@@ -1,16 +1,13 @@
+<toaster-container [toasterconfig]="toasterConfig"></toaster-container>
 <nb-card>
-  <nb-card-header>
-    Language mappings of {{appId}}
-  </nb-card-header>
+  <nb-card>
+    <nb-card-header>
+      Language mappings of {{appId}}
+    </nb-card-header>
 
-  <nb-card-body>
-    <ng2-smart-table 
-      [settings]="settings" 
-      [source]="source" 
-      (create)="console.log('create')"
-      (createConfirm)="onCreateConfirm($event)" 
-      (editConfirm)="onEditConfirm($event)" 
-      (deleteConfirm)="onDeleteConfirm($event)">
-    </ng2-smart-table>
-  </nb-card-body>
-</nb-card>
+    <nb-card-body>
+      <ng2-smart-table [settings]="settings" [source]="source" (create)="console.log('create')" (createConfirm)="onCreateConfirm($event)"
+        (editConfirm)="onEditConfirm($event)" (deleteConfirm)="onDeleteConfirm($event)">
+      </ng2-smart-table>
+    </nb-card-body>
+  </nb-card>

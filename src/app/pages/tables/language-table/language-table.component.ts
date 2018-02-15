@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { ToasterService, Toast, ToasterConfig, BodyOutputType } from 'angular2-toaster';
 
 import { LanguageService, LanguageDetails } from '../../../services/cms-services/language.service';
-
+import 'style-loader!angular2-toaster/toaster.css';
 
 @Component({
   selector: 'ngx-language-table',
@@ -50,7 +50,7 @@ export class LanguageTableComponent implements OnInit {
   };
 
   source: LocalDataSource = new LocalDataSource();
-  errorToasterConfig: ToasterConfig;
+  public toasterConfig: ToasterConfig;
   constructor(
     private languageService: LanguageService,
     private toasterService: ToasterService,
@@ -61,30 +61,15 @@ export class LanguageTableComponent implements OnInit {
   ngOnInit(): void {
     const self = this;
 
-    self.errorToasterConfig = new ToasterConfig({
-            positionClass: 'toast-top-full-width',
-            timeout: 0,
-            newestOnTop: true,
-            tapToDismiss: true,
-            preventDuplicates: true,
-            animation: 'fade',
-            limit: 5,
-          });
-
-    self.languageService.getLanguageList('Silvertooth')
-      .subscribe(r => {
-        const languageMappingsObservables: Observable<LanguageDetails>[] = [];
-
-        const toast: Toast = {
-          type: 'info',
-          title: 'OK',
-          body: 'Completed',
-          timeout: 5,
-          showCloseButton: true,
-          bodyOutputType: BodyOutputType.TrustedHtml,
-        };
-        this.toasterService.popAsync(toast);
-      });
+    self.toasterConfig = new ToasterConfig({
+      positionClass: 'toast-top-full-width',
+      timeout: 0,
+      newestOnTop: true,
+      tapToDismiss: true,
+      preventDuplicates: true,
+      animation: 'fade',
+      limit: 5,
+    });
 
     self.languageService.getLanguageList('Silvertooth')
       .subscribe(r => {
@@ -108,7 +93,6 @@ export class LanguageTableComponent implements OnInit {
 
           const toast: Toast = {
             type: 'error',
-            toasterConfig: self.errorToasterConfig,
             title: 'Oops! Error',
             body: 'Failed to get languages: ' + error.message,
             timeout: 0,
@@ -119,15 +103,14 @@ export class LanguageTableComponent implements OnInit {
         })
       }, error => {
         const toast: Toast = {
-            type: 'error',
-            toasterConfig: self.errorToasterConfig,
-            title: 'Oops! Error',
-            body: 'Failed to get languages: ' + error.message,
-            timeout: 0,
-            showCloseButton: true,
-            bodyOutputType: BodyOutputType.TrustedHtml,
-          };
-          this.toasterService.popAsync(toast);
+          type: 'error',
+          title: 'Oops! Error',
+          body: 'Failed to get languages: ' + error.message,
+          timeout: 0,
+          showCloseButton: true,
+          bodyOutputType: BodyOutputType.TrustedHtml,
+        };
+        this.toasterService.popAsync(toast);
       });
   }
 
@@ -136,9 +119,26 @@ export class LanguageTableComponent implements OnInit {
     self.languageService
       .createAllLanguagePairs('Silvertooth', event.newData)
       .subscribe(result => {
+        const toast: Toast = {
+          type: 'success',
+          title: 'Success',
+          body: 'Successfully created',
+          timeout: 0,
+          showCloseButton: true,
+          bodyOutputType: BodyOutputType.TrustedHtml,
+        };
+        this.toasterService.popAsync(toast);
         event.confirm.resolve();
       }, error => {
-        alert(JSON.stringify(error));
+        const toast: Toast = {
+          type: 'error',
+          title: 'Oops! Error',
+          body: 'Failed to create: ' + JSON.parse(error).error,
+          timeout: 0,
+          showCloseButton: true,
+          bodyOutputType: BodyOutputType.TrustedHtml,
+        };
+        this.toasterService.popAsync(toast);
         event.confirm.reject();
       });
   }
@@ -149,9 +149,27 @@ export class LanguageTableComponent implements OnInit {
     self.languageService
       .updateAllLanguagePairs('Silvertooth', event.newData, event.data)
       .subscribe(result => {
+        const toast: Toast = {
+          type: 'success',
+          title: 'Success',
+          body: 'Successfully updated',
+          timeout: 0,
+          showCloseButton: true,
+          bodyOutputType: BodyOutputType.TrustedHtml,
+        };
+        this.toasterService.popAsync(toast);
         event.confirm.resolve();
       }, error => {
-        alert(JSON.stringify(error));
+        const toast: Toast = {
+          type: 'error',
+          title: 'Oops! Error',
+          body: 'Failed to update: ' + JSON.parse(error).error,
+          timeout: 0,
+          showCloseButton: true,
+          bodyOutputType: BodyOutputType.TrustedHtml,
+        };
+        this.toasterService.popAsync(toast);
+
         event.confirm.reject();
       });
   }
@@ -160,11 +178,31 @@ export class LanguageTableComponent implements OnInit {
     const self = this;
     if (window.confirm('Are you sure you want to delete?')) {
       self.languageService
-        .deleteLanguagePair('Silvertooth', event.data.key)
+        .deleteAllLanguagePairs('Silvertooth', event.data)
         .subscribe(result => {
+          const toast: Toast = {
+            type: 'success',
+            title: 'Success',
+            body: 'Successfully deleted',
+            timeout: 0,
+            showCloseButton: true,
+            bodyOutputType: BodyOutputType.TrustedHtml,
+          };
+          this.toasterService.popAsync(toast);
+
           event.confirm.resolve();
         }, error => {
-          event.confirm.resolve();
+          const toast: Toast = {
+            type: 'error',
+            title: 'Oops! Error',
+            body: 'Failed to delete: ' + JSON.parse(error).error,
+            timeout: 0,
+            showCloseButton: true,
+            bodyOutputType: BodyOutputType.TrustedHtml,
+          };
+          this.toasterService.popAsync(toast);
+
+          event.confirm.reject();
         });
     } else {
       event.confirm.reject();

@@ -42,7 +42,7 @@ export interface LanguageMappings {
 @Injectable()
 export class LanguageService {
 
-    constructor( private http: HttpClient) {
+    constructor(private http: HttpClient) {
     }
 
     getLanguageList(appId: string): Observable<LanguageList> {
@@ -50,12 +50,12 @@ export class LanguageService {
             obs => {
                 this.http.get(environment.service_base_url + environment.service_language_endpoint
                     + '/' + appId)
-                .subscribe(resp => {
-                    obs.next(resp as LanguageList);
-                    obs.complete();
-                }, error => {
-                    obs.error(JSON.stringify(error.message));
-                });
+                    .subscribe(resp => {
+                        obs.next(resp as LanguageList);
+                        obs.complete();
+                    }, error => {
+                        obs.error(JSON.stringify(error.message));
+                    });
             },
         );
         return observable;
@@ -67,12 +67,12 @@ export class LanguageService {
             obs => {
                 this.http.get(environment.service_base_url + environment.service_language_endpoint
                     + '/' + appId + '/' + languageCode)
-                .subscribe(resp => {
-                    obs.next(resp as LanguageDetails);
-                    obs.complete();
-                }, error => {
-                    obs.error(JSON.stringify(error.message));
-                });
+                    .subscribe(resp => {
+                        obs.next(resp as LanguageDetails);
+                        obs.complete();
+                    }, error => {
+                        obs.error(JSON.stringify(error.message));
+                    });
             },
         );
         return observable;
@@ -105,7 +105,7 @@ export class LanguageService {
                                     languageMappings = langMap.mappings.map(lm => {
                                         let newMap: LanguageMappings = languageMappings
                                             .find(m => m.key.substring(m.key.indexOf('_') + 1)
-                                                    === lm.key.substring(lm.key.indexOf('_') + 1));
+                                                === lm.key.substring(lm.key.indexOf('_') + 1));
 
                                         if (!newMap)
                                             newMap = {
@@ -133,7 +133,7 @@ export class LanguageService {
         return observable;
     }
 
-    updateAllLanguagePairs (
+    updateAllLanguagePairs(
         appId: string,
         newMappings: LanguageMappings,
         oldMappings: LanguageMappings,
@@ -146,11 +146,11 @@ export class LanguageService {
         return self.createAllLanguagePairs(appId, newMappings);
     }
 
-    createAllLanguagePairs (
+    createAllLanguagePairs(
         appId: string,
         languageMappings: LanguageMappings,
     ): Observable<boolean> {
-        return new Observable<boolean> (obs => {
+        return new Observable<boolean>(obs => {
             const self = this;
             const key = languageMappings.key;
             const createLanguageObvs: Observable<string>[] = [];
@@ -181,46 +181,75 @@ export class LanguageService {
         key: string,
         value: string): Observable<string> {
 
-            const self = this;
+        const self = this;
 
-            return new Observable<string>(
-                obs => {
-                    self.http.post(environment.service_base_url + environment.service_language_endpoint
-                        + '/' + appId + '/' + languageCode + '/' + key,
-                        {
-                            value: value,
-                        })
-                        .subscribe(
-                            result => {
-                                obs.next('');
-                                obs.complete();
-                            },
-                            error => obs.error(JSON.stringify(error)),
-                        );
-                },
-            );
-
-        }
-
-        deleteLanguagePair(
-            appId: string,
-            key: string): Observable<string> {
-
-                const self = this;
-
-                return new Observable<string>(
-                    obs => {
-                        self.http.delete(environment.service_base_url + environment.service_language_endpoint
-                            + '/' + appId + '/all/' + key)
-                            .subscribe(
-                                result => {
-                                    obs.next('');
-                                    obs.complete();
-                                },
-                                error => obs.error(JSON.stringify(error)),
-                            );
+        return new Observable<string>(
+            obs => {
+                self.http.post(environment.service_base_url + environment.service_language_endpoint
+                    + '/' + appId + '/' + languageCode + '/' + key,
+                    {
+                        value: value,
+                    })
+                    .subscribe(
+                    result => {
+                        obs.next('');
+                        obs.complete();
                     },
+                    error => obs.error(JSON.stringify(error)),
                 );
+            },
+        );
 
+    }
+
+    deleteAllLanguagePairs(
+        appId: string,
+        languageMappings: LanguageMappings,
+    ): Observable<boolean> {
+        return new Observable<boolean>(obs => {
+            const self = this;
+            const key = languageMappings.key;
+            const deleteLanguageObvs: Observable<string>[] = [];
+
+            for (const lanCode in languageMappings) {
+                if (lanCode !== 'key') {
+                    deleteLanguageObvs.push(
+                        self.deleteLanguagePair(appId, lanCode, key));
+                }
             }
+
+            forkJoin(deleteLanguageObvs).subscribe(results => {
+
+            }, error => {
+                obs.error(error);
+            }, () => {
+                obs.next(true);
+                obs.complete();
+            });
+
+        });
+
+    }
+    deleteLanguagePair(
+        appId: string,
+        languageCode: string,
+        key: string): Observable<string> {
+
+        const self = this;
+
+        return new Observable<string>(
+            obs => {
+                self.http.delete(environment.service_base_url + environment.service_language_endpoint
+                    + '/' + appId + '/' + languageCode + '/' + key)
+                    .subscribe(
+                    result => {
+                        obs.next('');
+                        obs.complete();
+                    },
+                    error => obs.error(JSON.stringify(error)),
+                );
+            },
+        );
+
+    }
 }
