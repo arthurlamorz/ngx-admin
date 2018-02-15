@@ -5,13 +5,17 @@ import { ToasterService, Toast, ToasterConfig, BodyOutputType } from 'angular2-t
 
 import { LanguageService, LanguageDetails } from '../../../services/cms-services/language.service';
 
+
 @Component({
   selector: 'ngx-language-table',
   templateUrl: './language-table.component.html',
-  styleUrls: ['./language-table.component.scss'],
   styles: [`
     nb-card {
       transform: translate3d(0, 0, 0);
+    }
+
+    :host ::ng-deep td {
+      word-break: break-all;
     }
   `],
 })
@@ -28,6 +32,7 @@ export class LanguageTableComponent implements OnInit {
       editButtonContent: '<i class="nb-edit"></i>',
       saveButtonContent: '<i class="nb-checkmark"></i>',
       cancelButtonContent: '<i class="nb-close"></i>',
+      confirmSave: true,
     },
     delete: {
       deleteButtonContent: '<i class="nb-trash"></i>',
@@ -39,17 +44,13 @@ export class LanguageTableComponent implements OnInit {
     columns: {
       key: {
         title: 'Key',
-        type: 'number',
-      },
-      value: {
-        title: 'Text',
         type: 'string',
       },
     },
   };
 
   source: LocalDataSource = new LocalDataSource();
-  toasterConfig: ToasterConfig;
+  errorToasterConfig: ToasterConfig;
   constructor(
     private languageService: LanguageService,
     private toasterService: ToasterService,
@@ -60,67 +61,80 @@ export class LanguageTableComponent implements OnInit {
   ngOnInit(): void {
     const self = this;
 
-    self.languageService.getlanguageList('Silvertooth')
+    self.errorToasterConfig = new ToasterConfig({
+            positionClass: 'toast-top-full-width',
+            timeout: 0,
+            newestOnTop: true,
+            tapToDismiss: true,
+            preventDuplicates: true,
+            animation: 'fade',
+            limit: 5,
+          });
+
+    self.languageService.getLanguageList('Silvertooth')
       .subscribe(r => {
         const languageMappingsObservables: Observable<LanguageDetails>[] = [];
 
-        r.languages.forEach(
-          l => languageMappingsObservables.push(
-            self.languageService.getLanguage('Silvertooth', l)));
+        const toast: Toast = {
+          type: 'info',
+          title: 'OK',
+          body: 'Completed',
+          timeout: 5,
+          showCloseButton: true,
+          bodyOutputType: BodyOutputType.TrustedHtml,
+        };
+        this.toasterService.popAsync(toast);
+      });
 
-        Observable.forkJoin(languageMappingsObservables).subscribe(results => {
-          results.forEach(l => self.source.load(l.mappings));
+    self.languageService.getLanguageList('Silvertooth')
+      .subscribe(r => {
+        const languageDetails: Observable<LanguageDetails>[] = [];
+        const settings = JSON.parse(JSON.stringify(self.settings));
+
+        r.languages.forEach(lanCode => {
+          languageDetails.push(self.languageService.getLanguage('Silvertooth', lanCode))
+          settings.columns[lanCode] = {
+            title: lanCode,
+            type: 'string',
+          };
+        });
+        self.settings = settings;
+
+
+        const lan = self.languageService.getAllLanguages('Silvertooth');
+        lan.subscribe(result => {
+          self.source.load(result);
         }, error => {
-          self.toasterConfig = new ToasterConfig({
-            positionClass: 'toast-top-full-width',
-            timeout: 0,
-            newestOnTop: true,
-            tapToDismiss: true,
-            preventDuplicates: true,
-            animation: 'fade',
-            limit: 5,
-          });
 
           const toast: Toast = {
             type: 'error',
+            toasterConfig: self.errorToasterConfig,
             title: 'Oops! Error',
-            body: 'App cards failed: ' + error.message,
+            body: 'Failed to get languages: ' + error.message,
             timeout: 0,
             showCloseButton: true,
             bodyOutputType: BodyOutputType.TrustedHtml,
           };
           this.toasterService.popAsync(toast);
-        }, () => {
-          self.toasterConfig = new ToasterConfig({
-            positionClass: 'toast-top-full-width',
-            timeout: 0,
-            newestOnTop: true,
-            tapToDismiss: true,
-            preventDuplicates: true,
-            animation: 'fade',
-            limit: 5,
-          });
-
-          const toast: Toast = {
-            type: 'info',
-            title: 'OK',
-            body: 'Completed',
-            timeout: 5,
-            showCloseButton: true,
-            bodyOutputType: BodyOutputType.TrustedHtml,
-          };
-          this.toasterService.popAsync(toast);
-        });
-
+        })
       }, error => {
-        alert(JSON.stringify(error));
+        const toast: Toast = {
+            type: 'error',
+            toasterConfig: self.errorToasterConfig,
+            title: 'Oops! Error',
+            body: 'Failed to get languages: ' + error.message,
+            timeout: 0,
+            showCloseButton: true,
+            bodyOutputType: BodyOutputType.TrustedHtml,
+          };
+          this.toasterService.popAsync(toast);
       });
   }
+
   onCreateConfirm(event): void {
     const self = this;
-    const languageCode = 'zh-HANT'
     self.languageService
-      .createLanguagePair('Silvertooth', languageCode, event.newData.key, event.newData.value)
+      .createAllLanguagePairs('Silvertooth', event.newData)
       .subscribe(result => {
         event.confirm.resolve();
       }, error => {
@@ -128,6 +142,20 @@ export class LanguageTableComponent implements OnInit {
         event.confirm.reject();
       });
   }
+
+  onEditConfirm(event): void {
+    const self = this;
+
+    self.languageService
+      .updateAllLanguagePairs('Silvertooth', event.newData, event.data)
+      .subscribe(result => {
+        event.confirm.resolve();
+      }, error => {
+        alert(JSON.stringify(error));
+        event.confirm.reject();
+      });
+  }
+
   onDeleteConfirm(event): void {
     if (window.confirm('Are you sure you want to delete?')) {
       event.confirm.resolve();
