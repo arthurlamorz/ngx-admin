@@ -201,4 +201,26 @@ export class LanguageService {
             );
 
         }
+
+        deleteLanguagePair(
+            appId: string,
+            key: string): Observable<string> {
+
+                const self = this;
+
+                return new Observable<string>(
+                    obs => {
+                        self.http.delete(environment.service_base_url + environment.service_language_endpoint
+                            + '/' + appId + '/all/' + key)
+                            .subscribe(
+                                result => {
+                                    obs.next('');
+                                    obs.complete();
+                                },
+                                error => obs.error(JSON.stringify(error)),
+                            );
+                    },
+                );
+
+            }
 }

@@ -157,8 +157,15 @@ export class LanguageTableComponent implements OnInit {
   }
 
   onDeleteConfirm(event): void {
+    const self = this;
     if (window.confirm('Are you sure you want to delete?')) {
-      event.confirm.resolve();
+      self.languageService
+        .deleteLanguagePair('Silvertooth', event.data.key)
+        .subscribe(result => {
+          event.confirm.resolve();
+        }, error => {
+          event.confirm.resolve();
+        });
     } else {
       event.confirm.reject();
     }
