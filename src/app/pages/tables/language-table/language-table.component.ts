@@ -45,6 +45,7 @@ export class LanguageTableComponent implements OnInit {
       key: {
         title: 'Key',
         type: 'string',
+        width: '250px',
       },
     },
   };
