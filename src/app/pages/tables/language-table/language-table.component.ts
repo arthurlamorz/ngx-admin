@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { LocalDataSource } from 'ng2-smart-table';
 import { Observable } from 'rxjs/Observable';
+import { ActivatedRoute } from '@angular/router';
+
 import { ToasterService, Toast, ToasterConfig, BodyOutputType } from 'angular2-toaster';
 
 import { LanguageService, LanguageDetails } from '../../../services/cms-services/language.service';
@@ -16,10 +18,16 @@ import 'style-loader!angular2-toaster/toaster.css';
 
     :host ::ng-deep td {
       word-break: break-all;
+      height: 75px;
+    }
+
+    :host ::ng-deep textarea {
+      word-break: break-all;
+      height: 200px;
     }
   `],
 })
-export class LanguageTableComponent implements OnInit {
+export class LanguageTableComponent implements OnInit, OnDestroy {
 
   settings = {
     add: {
@@ -46,21 +54,32 @@ export class LanguageTableComponent implements OnInit {
         title: 'Key',
         type: 'string',
         width: '250px',
+        editor: {
+          type: 'textarea',
+        },
       },
     },
   };
+
+  private sub;
+  private appId;
 
   source: LocalDataSource = new LocalDataSource();
   public toasterConfig: ToasterConfig;
   constructor(
     private languageService: LanguageService,
     private toasterService: ToasterService,
+    private route: ActivatedRoute,
   ) {
 
   }
 
   ngOnInit(): void {
     const self = this;
+
+    self.sub = self.route.params.subscribe(params => {
+      self.appId = params['appid'];
+    });
 
     self.toasterConfig = new ToasterConfig({
       positionClass: 'toast-top-full-width',
@@ -72,22 +91,25 @@ export class LanguageTableComponent implements OnInit {
       limit: 5,
     });
 
-    self.languageService.getLanguageList('Silvertooth')
+    self.languageService.getLanguageList(self.appId)
       .subscribe(r => {
         const languageDetails: Observable<LanguageDetails>[] = [];
         const settings = JSON.parse(JSON.stringify(self.settings));
 
         r.languages.forEach(lanCode => {
-          languageDetails.push(self.languageService.getLanguage('Silvertooth', lanCode))
+          languageDetails.push(self.languageService.getLanguage(self.appId, lanCode))
           settings.columns[lanCode] = {
             title: lanCode,
             type: 'string',
+            editor: {
+              type: 'textarea',
+            },
           };
         });
         self.settings = settings;
 
 
-        const lan = self.languageService.getAllLanguages('Silvertooth');
+        const lan = self.languageService.getAllLanguages(self.appId);
         lan.subscribe(result => {
           self.source.load(result);
         }, error => {
@@ -115,10 +137,14 @@ export class LanguageTableComponent implements OnInit {
       });
   }
 
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
+  }
+
   onCreateConfirm(event): void {
     const self = this;
     self.languageService
-      .createAllLanguagePairs('Silvertooth', event.newData)
+      .createAllLanguagePairs(self.appId, event.newData)
       .subscribe(result => {
         const toast: Toast = {
           type: 'success',
@@ -148,7 +174,7 @@ export class LanguageTableComponent implements OnInit {
     const self = this;
 
     self.languageService
-      .updateAllLanguagePairs('Silvertooth', event.newData, event.data)
+      .updateAllLanguagePairs(self.appId, event.newData, event.data)
       .subscribe(result => {
         const toast: Toast = {
           type: 'success',
@@ -179,7 +205,7 @@ export class LanguageTableComponent implements OnInit {
     const self = this;
     if (window.confirm('Are you sure you want to delete?')) {
       self.languageService
-        .deleteAllLanguagePairs('Silvertooth', event.data)
+        .deleteAllLanguagePairs(self.appId, event.data)
         .subscribe(result => {
           const toast: Toast = {
             type: 'success',

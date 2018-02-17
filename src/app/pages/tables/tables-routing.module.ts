@@ -13,7 +13,7 @@ const routes: Routes = [{
     component: SmartTableComponent,
   },
   {
-    path: 'language-table',
+    path: 'language-table/:appid',
     component: LanguageTableComponent,
   }],
 }];
