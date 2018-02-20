@@ -61,6 +61,45 @@ export class LanguageService {
         return observable;
     }
 
+    getFonts(appId: string, languageCode: string): Observable<LanguageFont> {
+        const self = this;
+
+        return new Observable<LanguageFont>(
+            obs => {
+                self.http.get(environment.service_base_url + environment.service_language_endpoint
+                    + '/' + appId + '/' + languageCode + '/fonts')
+                    .subscribe(resp => {
+                        obs.next(resp as LanguageFont);
+                        obs.complete();
+                    }, error => {
+                        obs.error(JSON.stringify(error.message));
+                    })
+            },
+        );
+    }
+
+    updateFonts(fontDetail: LanguageFont): Observable<string> {
+        const self = this;
+
+        return new Observable<string>(
+            obs => {
+                self.http.post(environment.service_base_url + environment.service_language_endpoint
+                    + '/' + fontDetail.gameId + '/' + fontDetail.languageCode + '/fonts',
+                    {
+                        fontname: fontDetail.fontName,
+                        fontsizes: fontDetail.fontSizes,
+                    })
+                    .subscribe(
+                    result => {
+                        obs.next('');
+                        obs.complete();
+                    },
+                    error => obs.error(JSON.stringify(error)),
+                );
+            },
+        );
+
+    }
 
     getLanguage(appId: string, languageCode: string): Observable<LanguageDetails> {
         const observable = new Observable<LanguageDetails>(
