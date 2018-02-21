@@ -78,6 +78,36 @@ export class LanguageService {
         );
     }
 
+    getAllFonts(appId: string): Observable<LanguageFont[]> {
+        const self = this;
+        const observable = new Observable<LanguageFont[]>(
+            obs => {
+                self.getLanguageList(appId).subscribe(
+                    langList => {
+                        const langDetailObvs: Observable<LanguageFont>[] = [];
+
+                        langList.languages.forEach(l => {
+                            langDetailObvs.push(self.getFonts(appId, l));
+                        });
+
+
+                        forkJoin(langDetailObvs).subscribe(
+                            fonts => {
+                                obs.next(fonts);
+                                obs.complete();
+                            }, error => {
+                                obs.error(error);
+                            });
+
+                    }, error => {
+                        obs.error(error);
+                    },
+                );
+            },
+        );
+
+        return observable;
+    }
     updateFonts(fontDetail: LanguageFont): Observable<string> {
         const self = this;
 

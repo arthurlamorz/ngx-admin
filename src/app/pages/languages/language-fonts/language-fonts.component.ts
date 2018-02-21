@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { LocalDataSource } from 'ng2-smart-table';
-import { Observable } from 'rxjs/Observable';
 import { ActivatedRoute } from '@angular/router';
 
 import { ToasterService, Toast, ToasterConfig, BodyOutputType } from 'angular2-toaster';
 
-import { LanguageService, LanguageDetails } from '../../../services/cms-services/language.service';
+import { LanguageService } from '../../../services/cms-services/language.service';
 import 'style-loader!angular2-toaster/toaster.css';
 
 @Component({
@@ -50,13 +49,40 @@ export class LanguageFontsComponent implements OnInit, OnDestroy {
       perPage: 50,
     },
     columns: {
-      key: {
-        title: 'Key',
+      languageCode: {
+        title: 'Language',
+        type: 'string',
+        width: '100px',
+      },
+      fontName: {
+        title: 'Font Name',
         type: 'string',
         width: '250px',
-        editor: {
-          type: 'textarea',
-        },
+      },
+      'xs': {
+        title: 'Font Size Xtra Small',
+        type: 'number',
+        width: '100px',
+      },
+      'sm': {
+        title: 'Font Size Small',
+        type: 'number',
+        width: '100px',
+      },
+      'md': {
+        title: 'Font Size Medium',
+        type: 'number',
+        width: '100px',
+      },
+      'lg': {
+        title: 'Font Size Large',
+        type: 'number',
+        width: '100px',
+      },
+      'xl': {
+        title: 'Font Size Xtra Large',
+        type: 'number',
+        width: '100px',
       },
     },
   };
@@ -91,50 +117,34 @@ export class LanguageFontsComponent implements OnInit, OnDestroy {
       limit: 5,
     });
 
-    self.languageService.getLanguageList(self.appId)
-      .subscribe(r => {
-        const languageDetails: Observable<LanguageDetails>[] = [];
-        const settings = JSON.parse(JSON.stringify(self.settings));
-
-        r.languages.forEach(lanCode => {
-          languageDetails.push(self.languageService.getLanguage(self.appId, lanCode))
-          settings.columns[lanCode] = {
-            title: lanCode,
-            type: 'string',
-            editor: {
-              type: 'textarea',
-            },
-          };
+    self.languageService.getAllFonts(self.appId)
+      .subscribe(fonts => {
+        const fontTableRows = [];
+        fonts.forEach(f => {
+          fontTableRows.push({
+            languageCode: f.languageCode,
+            fontName: f.fontName,
+            xs: f.fontSizes.xs,
+            sm: f.fontSizes.sm,
+            md: f.fontSizes.md,
+            lg: f.fontSizes.lg,
+            xl: f.fontSizes.xl,
+          })
         });
-        self.settings = settings;
 
-
-        const lan = self.languageService.getAllLanguages(self.appId);
-        lan.subscribe(result => {
-          self.source.load(result);
+          self.source.load(fontTableRows);
         }, error => {
 
           const toast: Toast = {
             type: 'error',
             title: 'Oops! Error',
-            body: 'Failed to get languages: ' + error.message,
+            body: 'Failed to get fonts: ' + error.message,
             timeout: 0,
             showCloseButton: true,
             bodyOutputType: BodyOutputType.TrustedHtml,
           };
           this.toasterService.popAsync(toast);
-        })
-      }, error => {
-        const toast: Toast = {
-          type: 'error',
-          title: 'Oops! Error',
-          body: 'Failed to get languages: ' + error.message,
-          timeout: 0,
-          showCloseButton: true,
-          bodyOutputType: BodyOutputType.TrustedHtml,
-        };
-        this.toasterService.popAsync(toast);
-      });
+        });
   }
 
   ngOnDestroy(): void {

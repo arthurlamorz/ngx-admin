@@ -9,7 +9,7 @@ const routes: Routes = [{
   path: '',
   component: LanguagesComponent,
   children: [{
-    path: 'fonts:appid',
+    path: 'fonts/:appid',
     component: LanguageFontsComponent,
   },
   {
