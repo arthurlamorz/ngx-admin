@@ -108,6 +108,7 @@ export class LanguageService {
 
         return observable;
     }
+
     updateFonts(fontDetail: LanguageFont): Observable<string> {
         const self = this;
 

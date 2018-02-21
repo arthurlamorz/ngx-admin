@@ -124,37 +124,49 @@ export class LanguageFontsComponent implements OnInit, OnDestroy {
           fontTableRows.push({
             languageCode: f.languageCode,
             fontName: f.fontName,
-            xs: f.fontSizes.xs,
-            sm: f.fontSizes.sm,
-            md: f.fontSizes.md,
-            lg: f.fontSizes.lg,
-            xl: f.fontSizes.xl,
+            xs: Number(f.fontSizes.xs),
+            sm: Number(f.fontSizes.sm),
+            md: Number(f.fontSizes.md),
+            lg: Number(f.fontSizes.lg),
+            xl: Number(f.fontSizes.xl),
           })
         });
 
-          self.source.load(fontTableRows);
-        }, error => {
+        self.source.load(fontTableRows);
+      }, error => {
 
-          const toast: Toast = {
-            type: 'error',
-            title: 'Oops! Error',
-            body: 'Failed to get fonts: ' + error.message,
-            timeout: 0,
-            showCloseButton: true,
-            bodyOutputType: BodyOutputType.TrustedHtml,
-          };
-          this.toasterService.popAsync(toast);
-        });
+        const toast: Toast = {
+          type: 'error',
+          title: 'Oops! Error',
+          body: 'Failed to get fonts: ' + error.message,
+          timeout: 0,
+          showCloseButton: true,
+          bodyOutputType: BodyOutputType.TrustedHtml,
+        };
+        this.toasterService.popAsync(toast);
+      });
   }
 
   ngOnDestroy(): void {
     this.sub.unsubscribe();
   }
 
-  onCreateConfirm(event): void {
+  onCreateOrEditConfirm(event): void {
     const self = this;
-    self.languageService
-      .createAllLanguagePairs(self.appId, event.newData)
+    const newData = event.newData;
+    const fontObj = {
+      gameId: self.appId,
+      languageCode: newData.languageCode,
+      fontName: newData.fontName,
+      fontSizes: {
+        xs: Number(newData.xs),
+        sm: Number(newData.sm),
+        md: Number(newData.md),
+        lg: Number(newData.lg),
+        xl: Number(newData.xl),
+      },
+    };
+    self.languageService.updateFonts(fontObj)
       .subscribe(result => {
         const toast: Toast = {
           type: 'success',
@@ -176,37 +188,6 @@ export class LanguageFontsComponent implements OnInit, OnDestroy {
           bodyOutputType: BodyOutputType.TrustedHtml,
         };
         this.toasterService.popAsync(toast);
-        event.confirm.reject();
-      });
-  }
-
-  onEditConfirm(event): void {
-    const self = this;
-
-    self.languageService
-      .updateAllLanguagePairs(self.appId, event.newData, event.data)
-      .subscribe(result => {
-        const toast: Toast = {
-          type: 'success',
-          title: 'Success',
-          body: 'Successfully updated',
-          timeout: 0,
-          showCloseButton: true,
-          bodyOutputType: BodyOutputType.TrustedHtml,
-        };
-        this.toasterService.popAsync(toast);
-        event.confirm.resolve();
-      }, error => {
-        const toast: Toast = {
-          type: 'error',
-          title: 'Oops! Error',
-          body: 'Failed to update: ' + JSON.parse(error).error,
-          timeout: 0,
-          showCloseButton: true,
-          bodyOutputType: BodyOutputType.TrustedHtml,
-        };
-        this.toasterService.popAsync(toast);
-
         event.confirm.reject();
       });
   }
