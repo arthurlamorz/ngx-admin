@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { TablesComponent } from './languages.component';
+import { LanguagesComponent } from './languages.component';
 import { LanguageFontsComponent } from './language-fonts/language-fonts.component';
 import { LanguageTableComponent } from './language-table/language-table.component';
 
 const routes: Routes = [{
   path: '',
-  component: TablesComponent,
+  component: LanguagesComponent,
   children: [{
     path: 'fonts:appid',
     component: LanguageFontsComponent,
@@ -22,10 +22,10 @@ const routes: Routes = [{
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class TablesRoutingModule { }
+export class LanguagesRoutingModule { }
 
 export const routedComponents = [
-  TablesComponent,
+  LanguagesComponent,
   LanguageFontsComponent,
   LanguageTableComponent,
 ];

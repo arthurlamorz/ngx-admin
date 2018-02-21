@@ -14,6 +14,9 @@ const routes: Routes = [{
     path: 'ui-features',
     loadChildren: './ui-features/ui-features.module#UiFeaturesModule',
   }, {
+    path: 'languages',
+    loadChildren: './languages/languages.module#LanguagesModule',
+  }, {
     path: 'components',
     loadChildren: './components/components.module#ComponentsModule',
   }, {

@@ -9,8 +9,8 @@ import { LanguageService, LanguageDetails } from '../../../services/cms-services
 import 'style-loader!angular2-toaster/toaster.css';
 
 @Component({
-  selector: 'ngx-language-table',
-  templateUrl: './language-table.component.html',
+  selector: 'ngx-language-fonts',
+  templateUrl: './language-fonts.component.html',
   styles: [`
     nb-card {
       transform: translate3d(0, 0, 0);

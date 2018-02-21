@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { TablesComponent } from './tables.component';
 import { SmartTableComponent } from './smart-table/smart-table.component';
-import { LanguageTableComponent } from './language-table/language-table.component';
 
 const routes: Routes = [{
   path: '',
@@ -12,10 +11,7 @@ const routes: Routes = [{
     path: 'smart-table',
     component: SmartTableComponent,
   },
-  {
-    path: 'language-table/:appid',
-    component: LanguageTableComponent,
-  }],
+  ],
 }];
 
 @NgModule({
@@ -27,5 +23,4 @@ export class TablesRoutingModule { }
 export const routedComponents = [
   TablesComponent,
   SmartTableComponent,
-  LanguageTableComponent,
 ];
