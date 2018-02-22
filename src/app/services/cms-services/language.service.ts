@@ -158,7 +158,20 @@ export class LanguageService {
                         const langDetailObvs: Observable<LanguageDetails>[] = [];
                         let languageMappings: LanguageMappings[] = [];
                         langList.languages.forEach(l => {
-                            langDetailObvs.push(self.getLanguage(appId, l));
+                            langDetailObvs.push(self.getLanguage(appId, l)
+                                // catch the 404 error and craete an empty mapping of that language
+                                .catch(err => {
+                                    return new Observable<LanguageDetails>(
+                                        errObs => {
+                                            errObs.next({
+                                                languageCode: l,
+                                                gameId: appId,
+                                                mappings: [],
+                                            });
+                                            obs.complete();
+                                        },
+                                    );
+                                }));
                         });
 
 
