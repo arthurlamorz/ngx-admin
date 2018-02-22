@@ -88,7 +88,7 @@ export class LanguageFontsComponent implements OnInit, OnDestroy {
   };
 
   private sub;
-  private appId;
+  public appId;
 
   source: LocalDataSource = new LocalDataSource();
   public toasterConfig: ToasterConfig;

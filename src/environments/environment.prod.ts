@@ -15,7 +15,7 @@ export const environment = {
   cognito_identity_endpoint: '',
   sts_endpoint: '',
 
-  main_api_endpoint: 'https://api.goblin-software.com/',
+  service_base_url: 'https://api.goblin-software.com/',
   service_applist_endpoint: 'cms',
   service_language_endpoint: 'language',
 };
