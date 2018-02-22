@@ -171,17 +171,20 @@ export class LanguageService {
                                     return newMap;
                                 });
 
+                                // need to sort the langDetails array by mappings.length,
+                                // otherwise the foreach=>map won't work
+                                langDetails = langDetails.sort((a, b) => a.mappings.length - b.mappings.length);
                                 langDetails.forEach(langMap => {
                                     languageMappings = langMap.mappings.map(lm => {
                                         let newMap: LanguageMappings = languageMappings
                                             .find(m => m.key.substring(m.key.indexOf('_') + 1)
                                                 === lm.key.substring(lm.key.indexOf('_') + 1));
 
-                                        if (!newMap)
+                                        if (!newMap) {
                                             newMap = {
-                                                key: lm.key,
+                                                key: lm.key.substring(lm.key.indexOf('_') + 1),
                                             };
-
+                                        }
                                         newMap[langMap.languageCode] = lm.value;
                                         return newMap;
                                     });
