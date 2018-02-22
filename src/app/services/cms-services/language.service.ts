@@ -168,7 +168,7 @@ export class LanguageService {
                                                 gameId: appId,
                                                 mappings: [],
                                             });
-                                            obs.complete();
+                                            errObs.complete();
                                         },
                                     );
                                 }));
