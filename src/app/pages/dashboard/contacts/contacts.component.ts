@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NbThemeService, NbMediaBreakpoint, NbMediaBreakpointsService } from '@nebular/theme';
 import { UserService } from '../../../@core/data/users.service';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'ngx-contacts',
@@ -18,8 +17,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
 
   constructor(private userService: UserService,
     private themeService: NbThemeService,
-    private breakpointService: NbMediaBreakpointsService,
-    private http: HttpClient) {
+    private breakpointService: NbMediaBreakpointsService) {
 
     this.breakpoints = this.breakpointService.getBreakpointsMap();
     this.themeSubscription = this.themeService.onMediaQueryChange()
@@ -30,11 +28,6 @@ export class ContactsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.http.get('https://api.goblin-software.com/languagedev/Silvertooth/en')
-      .subscribe(
-      data => {},
-      err => alert(JSON.stringify(err)),
-    );
     this.userService.getUsers()
       .subscribe((users: any) => {
         this.contacts = [

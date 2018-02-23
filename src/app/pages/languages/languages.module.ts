@@ -3,13 +3,13 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { ToasterModule } from 'angular2-toaster';
 
 import { ThemeModule } from '../../@theme/theme.module';
-import { TablesRoutingModule, routedComponents } from './tables-routing.module';
+import { LanguagesRoutingModule, routedComponents } from './languages-routing.module';
 import { SmartTableService } from '../../@core/data/smart-table.service';
 
 @NgModule({
   imports: [
     ThemeModule,
-    TablesRoutingModule,
+    LanguagesRoutingModule,
     Ng2SmartTableModule,
     ToasterModule,
   ],
@@ -20,4 +20,4 @@ import { SmartTableService } from '../../@core/data/smart-table.service';
     SmartTableService,
   ],
 })
-export class TablesModule { }
+export class LanguagesModule { }

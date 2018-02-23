@@ -12,6 +12,20 @@ export const MENU_ITEMS: NbMenuItem[] = [
     group: true,
   },
   {
+    title: 'Language',
+    icon: 'nb-tables',
+    children: [
+      {
+        title: 'Fonts',
+        link: '/pages/languages/language-fonts',
+      },
+      {
+        title: 'Language Table',
+        link: '/pages/languages/language-table',
+      },
+    ],
+  },
+  {
     title: 'UI Features',
     icon: 'nb-keypad',
     link: '/pages/ui-features',
@@ -130,6 +144,10 @@ export const MENU_ITEMS: NbMenuItem[] = [
       {
         title: 'Smart Table',
         link: '/pages/tables/smart-table',
+      },
+      {
+        title: 'Language Table',
+        link: '/pages/tables/language-table',
       },
     ],
   },

@@ -4,7 +4,7 @@ export const COSMIC_THEME = {
   variables: {
 
     temperature: [
-      '#2ec7fe',
+      '#ff0000',
       '#31ffad',
       '#7bff24',
       '#fff024',
