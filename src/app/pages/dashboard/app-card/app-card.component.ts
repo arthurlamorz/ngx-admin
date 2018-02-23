@@ -62,7 +62,7 @@ export class AppCardComponent implements OnInit {
           limit: 5,
         });
 
-        const toast: Toast = {
+        let toast: Toast = {
           type: 'error',
           title: 'Oops! Error',
           body: 'App cards failed: ' + error.message,
@@ -70,6 +70,18 @@ export class AppCardComponent implements OnInit {
           showCloseButton: true,
           bodyOutputType: BodyOutputType.TrustedHtml,
         };
+
+        if (error.status === 404) {
+          toast = {
+            type: 'info',
+            title: 'Create an app project!',
+            body: 'You have no app project created, create a new app project for managing your app.',
+            timeout: 0,
+            showCloseButton: true,
+            bodyOutputType: BodyOutputType.TrustedHtml,
+          };
+        }
+
         this.toasterService.popAsync(toast);
       });
 

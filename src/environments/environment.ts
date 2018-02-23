@@ -21,6 +21,7 @@ export const environment = {
   sts_endpoint: '',
 
   service_base_url: 'https://api.goblin-software.com/',
-  service_applist_endpoint: 'cms',
+
+  service_applist_endpoint: 'cmsdev',
   service_language_endpoint: 'languagedev',
 };
