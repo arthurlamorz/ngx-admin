@@ -35,14 +35,13 @@ export class AwsCognitoAuthProvider extends NbAbstractAuthProvider {
   }
 
   logout(): Observable<NbAuthResult> {
-    // return this.authService.logout('name');
-    return Observable.of(new NbAuthResult(
-      true,
-      {},
-      '/',
-      false,
-      'Sign out success.',
-    ));
+    const self = this;
+    self.loginService.logout();
+
+    return new Observable<NbAuthResult>(obs => {
+      obs.next(new NbAuthResult(true, null, '/auth/login'));
+      obs.complete();
+    });
   }
 
   authenticate(user: UserData): Observable<NbAuthResult> {
