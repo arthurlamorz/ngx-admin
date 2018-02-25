@@ -4,29 +4,29 @@
     <nb-card>
       <nb-card-header>Create an app project</nb-card-header>
       <nb-card-body>
-        <form>
+        <form (ngSubmit)="onSubmit()" >
           <div class="form-group row">
             <label for="appId" class="col-sm-3 col-form-label">App ID</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" id="appId" placeholder="Unique ID of the app">
+              <input type="text" class="form-control" id="appId" [(ngModel)]="model.appId" [ngModelOptions]="{standalone: true}" placeholder="Unique ID of the app">
             </div>
           </div>
           <div class="form-group row">
             <label for="appName" class="col-sm-3 col-form-label">App Name</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" id="appName" placeholder="Name of the app">
+              <input type="text" class="form-control" id="appName" [(ngModel)]="model.details.appName" [ngModelOptions]="{standalone: true}" placeholder="Name of the app">
             </div>
           </div>
           <div class="form-group row">
             <label for="abstract" class="col-sm-3 col-form-label">Abstract</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" id="abstract" placeholder="Abstract (short description) of the app">
+              <input type="text" class="form-control" id="abstract" [(ngModel)]="model.details.abstract" [ngModelOptions]="{standalone: true}" placeholder="Abstract (short description) of the app">
             </div>
           </div>
           <div class="form-group row">
             <label for="appDescription" class="col-sm-3 col-form-label">Description</label>
             <div class="col-sm-9">
-              <textarea rows="5" placeholder="Description of the app" class="form-control"></textarea>
+              <textarea rows="5" placeholder="Description of the app" [(ngModel)]="model.details.description" [ngModelOptions]="{standalone: true}"  class="form-control"></textarea>
             </div>
           </div>
         
