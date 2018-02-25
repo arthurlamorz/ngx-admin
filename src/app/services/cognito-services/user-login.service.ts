@@ -1,8 +1,8 @@
-import {environment} from '../../../environments/environment';
-import {Injectable} from '@angular/core';
+import { environment } from '../../../environments/environment';
+import { Injectable } from '@angular/core';
 // import {DynamoDBService} from "./ddb.service";
-import {CognitoCallback, CognitoUtil, LoggedInCallback} from './cognito.service';
-import {AuthenticationDetails, CognitoUser} from 'amazon-cognito-identity-js';
+import { CognitoCallback, CognitoUtil, LoggedInCallback } from './cognito.service';
+import { AuthenticationDetails, CognitoUser } from 'amazon-cognito-identity-js';
 import * as AWS from 'aws-sdk/global';
 import * as STS from 'aws-sdk/clients/sts';
 import { NbAuthResult } from '@nebular/auth';
@@ -36,7 +36,7 @@ export class UserLoginService {
 
             cognitoUser.authenticateUser(authenticationDetails, {
                 newPasswordRequired: function (userAttributes, requiredAttributes) {
-                    obs.next( new NbAuthResult (
+                    obs.next(new NbAuthResult(
                         false,
                         null,
                         null,
@@ -63,12 +63,12 @@ export class UserLoginService {
                     }
                     const sts = new STS(clientParams);
                     sts.getCallerIdentity(function (err, data) {
-                        obs.next( new NbAuthResult (true, data, '/', null, null, null))
+                        obs.next(new NbAuthResult(true, data, '/', null, null, null))
                     });
 
                 },
                 onFailure: function (err) {
-                    obs.next( new NbAuthResult (false, err, null, [err], [err.message], null))
+                    obs.next(new NbAuthResult(false, err, null, [err], [err.message], null))
                 },
             });
 
@@ -124,7 +124,7 @@ export class UserLoginService {
 
     isAuthenticated(callback: LoggedInCallback) {
         if (callback == null)
-            throw(new Error('UserLoginService: Callback in isAuthenticated() cannot be null'));
+            throw (new Error('UserLoginService: Callback in isAuthenticated() cannot be null'));
 
         const cognitoUser = this.cognitoUtil.getCurrentUser();
 
@@ -139,6 +139,18 @@ export class UserLoginService {
         } else {
             callback.isLoggedIn('Can\'t retrieve the CurrentUser', false);
         }
+    }
+
+    isLoggedIn(): Observable<boolean> {
+        const self = this;
+        return new Observable<boolean>(obs => {
+            self.isAuthenticated({
+                isLoggedIn: (err, isValid) => {
+                    obs.next(isValid);
+                    obs.complete();
+                },
+            });
+        });
     }
 
 }

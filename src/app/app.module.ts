@@ -16,6 +16,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { ThemeModule } from './@theme/theme.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CognitoAuthInterceptor } from './services/interceptors/cognito.http.interceptor';
+import { AuthGuard } from './auth/auth-guard.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -37,6 +38,7 @@ import { CognitoAuthInterceptor } from './services/interceptors/cognito.http.int
       useClass: CognitoAuthInterceptor,
       multi: true,
     },
+   AuthGuard,
   ],
 })
 export class AppModule {
