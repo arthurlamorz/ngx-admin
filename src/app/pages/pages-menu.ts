@@ -12,6 +12,16 @@ export const MENU_ITEMS: NbMenuItem[] = [
     group: true,
   },
   {
+    title: 'Apps',
+    icon: 'nb-layout-default',
+    children: [
+      {
+        title: 'Create App',
+        link: '/pages/app-list/create-app',
+      },
+    ],
+  },
+  {
     title: 'Language',
     icon: 'nb-tables',
     children: [

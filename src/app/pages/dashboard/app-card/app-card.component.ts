@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ToasterService, Toast, ToasterConfig, BodyOutputType } from 'angular2-toaster';
-import { AppListService, AppDetail } from '../../../services/cms-services/list-app.service';
+import { AppListService, AppData } from '../../../services/cms-services/app-list.service';
 
 import 'style-loader!angular2-toaster/toaster.css';
 
@@ -34,7 +34,7 @@ export class AppCardComponent implements OnInit {
   @Input() description: string;
   @Input() on = true;
 
-  appDetails: AppDetail[];
+  appDetails: AppData[];
   toasterConfig: ToasterConfig;
 
   constructor(

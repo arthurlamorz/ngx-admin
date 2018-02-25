@@ -16,6 +16,10 @@ const routes: Routes = [{
     path: 'ui-features',
     loadChildren: './ui-features/ui-features.module#UiFeaturesModule',
   }, {
+    path: 'app-list',
+    loadChildren: './app-list/app-list.module#AppListModule',
+  },
+  {
     path: 'languages',
     loadChildren: './languages/languages.module#LanguagesModule',
   }, {
