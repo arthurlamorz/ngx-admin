@@ -15,8 +15,8 @@ export class TreeComponent {
         { action: null, name: 'Add child node', cssClass: '' },
         { action: null, name: 'Remove node', cssClass: '' },
         { action: null, name: 'Rename node', cssClass: '' },
-        { action: null, name: 'Custom Action', cssClass: '' }
-      ]
+        { action: null, name: 'Custom Action', cssClass: '' },
+      ],
     },
     value: 'Programming languages by programming paradigm',
     children: [{
