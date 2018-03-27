@@ -3,6 +3,8 @@ import { TreeModel } from 'ng2-tree';
 
 @Component({
   selector: 'ngx-tree',
+  
+  styleUrls:['./tree.component.scss'],
   templateUrl: './tree.component.html',
 })
 export class TreeComponent {

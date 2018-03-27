@@ -1,0 +1,37 @@
+@import '../../../@theme/styles/themes';
+@include nb-install-component() {
+     ::ng-deep {
+        .node-menu {
+            position: relative;
+            width: 250px;
+            .node-menu-content {
+                width: 100%;
+                padding: 5px;
+                position: absolute;
+                border: 1px solid #bdbdbd;
+                border-radius: 5%;
+                box-shadow: 0 0 5px #bdbdbd;
+                background-color: #eee;
+                color: #212121;
+                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                z-index: 999;
+                li.node-menu-item {
+                    list-style: none;
+                    padding: 3px;
+                    .node-menu-item-icon {
+                        display: inline-block;
+                        width: 16px;
+                    }
+                }
+                .node-menu-item:hover {
+                    border-radius: 5%;
+                    opacity: unset;
+                    cursor: pointer;
+                    background-color: #bdbdbd;
+                    transition: background-color 0.2s ease-out;
+                }
+            }
+        }
+       
+    }
+}
