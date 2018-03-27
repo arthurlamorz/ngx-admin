@@ -3,18 +3,21 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { forkJoin } from 'rxjs/observable/forkjoin';
 import { Injectable } from '@angular/core';
-
 import { environment } from '../../../environments/environment';
-import { integer } from 'aws-sdk/clients/storagegateway';
 
 export interface ModelList {
     models: string[];
 }
 
-export interface Model {
+export interface ItemModel {
+    version: number,
+    model: ModelContent
+}
+
+export interface ModelContent {
     type: string;
     name: string;
-    children?: Model[];
+    children?: ModelContent[];
 }
 
 @Injectable()
@@ -26,8 +29,8 @@ export class ModelService {
     getModelList(appId: string): Observable<ModelList> {
         const observable = new Observable<ModelList>(
             obs => {
-                this.http.get(environment.service_base_url + '/' + environment.service_model_endpoint
-                    + '/' + appId)
+                this.http.get(environment.service_base_url + environment.service_cms_endpoint + '/' +
+                    environment.service_model_resource + '/' + appId)
                     .subscribe(resp => {
                         obs.next(resp as ModelList);
                         obs.complete();
@@ -39,51 +42,57 @@ export class ModelService {
         return observable;
     }
 
-    getModel(appId: string, modelName: string, version?: integer): Observable<Model> {
+    getModel(appId: string,
+            modelName: string,
+            version?: number,
+            returnDummyWhenError?: boolean): Observable<ItemModel> {
+
         const self = this;
 
-        return new Observable<Model>(
+        return new Observable<ItemModel>(
             obs => {
-                var urlString = environment.service_base_url + '/' + environment.service_model_endpoint
-                    + '/' + appId + '/' + modelName;
+                let urlString = environment.service_base_url + environment.service_cms_endpoint + '/' +
+                    environment.service_model_resource + '/' + appId + '/' + modelName;
 
                 if (version)
                     urlString = urlString + '?version=' + version;
 
                 self.http.get(urlString)
                     .subscribe(resp => {
-                        obs.next(resp as Model);
+                        obs.next(resp as ItemModel);
                         obs.complete();
                     }, error => {
-                        obs.error(JSON.stringify(error.message));
+
+                        if (returnDummyWhenError) {
+                            obs.next({
+                                version: -1,
+                                model: {
+                                    name: modelName,
+                                    type: null,
+                                },
+                            });
+                            obs.complete();
+                        } else
+                            obs.error(JSON.stringify(error))
                     })
             },
         );
     }
 
-    getAllModels(appId: string): Observable<Model[]> {
+    getAllModels(appId: string, version?: number): Observable<ItemModel[]> {
         const self = this;
-        
-        const observable = new Observable<Model[]>(
+
+        const observable = new Observable<ItemModel[]>(
             obs => {
                 self.getModelList(appId).subscribe(
                     modelList => {
-                        const modelObvs: Observable<Model>[] = [];
-                        let models: Model[] = [];
+                        const modelObvs: Observable<ItemModel>[] = [];
+
+                        // catch the 404 error and return an empty object
                         modelList.models.forEach(m => {
-                            modelObvs.push(self.getModel(appId, m)
-                                // catch the 404 error and cforget about it
-                                .catch(err => {
-                                    return new Observable<Model>(
-                                        errObs => {
-                                            errObs.next({
-                                                name: m,
-                                                type: null      
-                                            });
-                                            errObs.complete();
-                                        },
-                                    );
-                                }));
+
+                            const modelObv = self.getModel(appId, m, version, true);
+                            modelObvs.push(modelObv);
                         });
 
 
@@ -107,15 +116,15 @@ export class ModelService {
     }
 
 
-    updateModel(appId: string, modelName: string, theModel: Model): Observable<string> {
+    updateModel(appId: string, modelName: string, modelContent: ModelContent): Observable<string> {
         const self = this;
 
         return new Observable<string>(
             obs => {
-                var urlString = environment.service_base_url + '/' + environment.service_model_endpoint
-                    + '/' + appId + '/' + modelName;
+                const urlString = environment.service_base_url + environment.service_cms_endpoint + '/' +
+                    environment.service_model_resource + '/' + appId + '/' + modelName;
 
-                self.http.post(urlString, theModel)
+                self.http.post(urlString, modelContent)
                     .subscribe(
                         result => {
                             obs.next('');

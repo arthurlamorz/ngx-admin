@@ -10,7 +10,7 @@ const routes: Routes = [{
   component: ComponentsComponent,
   children: [
   {
-    path: 'tree',
+    path: 'tree/:appid',
     component: TreeComponent,
   }, {
     path: 'notifications',
