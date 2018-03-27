@@ -24,4 +24,5 @@ export const environment = {
 
   service_applist_endpoint: 'cmsdev',
   service_language_endpoint: 'languagedev',
+  service_model_endpoint: 'model',
 };
