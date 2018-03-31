@@ -4,6 +4,15 @@
     <nb-card>
       <nb-card-header>Tree</nb-card-header>
       <nb-card-body>
+        <div class="dropdown" ngbDropdown>
+          <button class="btn btn-primary" type="button" ngbDropdownToggle>
+            Models
+          </button>
+          <ul class="dropdown-menu" ngbDropdownMenu>
+            <li class="dropdown-item" *ngFor="let model of modelList" (click)="changeModel(model)">{{model}}</li>
+          </ul>
+        </div>
+
         <tree [tree]="tree" (menuItemSelected)="onMenuItemSelected($event)" (nodeCreated)="handleCreateNode($event)" #treeComponent>
           <ng-template let-node>
             <i>{{node.type}} :</i>
@@ -14,12 +23,11 @@
     </nb-card>
 
   </div>
-  <div>
+  <div class="col-md-6">
     <nb-card>
-      <nb-card-header>Actions</nb-card-header>
       <nb-card-body>
         <div>
-          <button class="btn btn-primary btn-md" (click)="updateModel()" >OK</button>
+          <button class="btn btn-primary btn-md" (click)="updateModel()">OK</button>
         </div>
       </nb-card-body>
     </nb-card>

@@ -19,6 +19,7 @@ export class TreeComponent implements OnInit, OnDestroy {
 
   private sub;
   public appId;
+  public modelList;
 
   private menuItemsMap = [
     { 'key': 'addString', 'value': 'Add string field', 'type': 'string' },
@@ -80,11 +81,9 @@ export class TreeComponent implements OnInit, OnDestroy {
       limit: 5,
     });
 
-    self.modelService.getAllModels(self.appId)
-      .subscribe(models => {
-
-        alert(JSON.stringify(models));
-
+    self.modelService.getModelList(self.appId)
+      .subscribe(r => {
+        self.modelList = r.models;
       }, error => {
 
         const toast: Toast = {
@@ -97,6 +96,32 @@ export class TreeComponent implements OnInit, OnDestroy {
         };
         this.toasterService.popAsync(toast);
       });
+  }
+
+  popToast(type: string, title: string, text: string): void {
+    const toast: Toast = {
+      type: type,
+      title: title,
+      body: text,
+      timeout: 0,
+      showCloseButton: true,
+      bodyOutputType: BodyOutputType.TrustedHtml,
+    };
+    this.toasterService.popAsync(toast);
+  }
+
+  changeModel(model: string): void {
+    const self = this;
+    if (!model)
+      self.popToast('error', 'Error when change model', 'Model not found')
+
+    self.modelService.getModel(self.appId, model)
+      .subscribe(m => {
+        self.tree = self.deserializeTreeModel(m.model);
+      },
+        error => {
+          self.popToast('error', 'Error when change model', JSON.stringify(error))
+        })
   }
 
   onMenuItemSelected($event): void {
@@ -163,6 +188,36 @@ export class TreeComponent implements OnInit, OnDestroy {
 
   }
 
+  deserializeTreeModel(modelContent: ModelContent): TreeModel {
+    const self = this;
+    const newTreeModel: TreeModel = {
+      type: modelContent.type,
+      value: modelContent.name,
+      id: Math.floor(99999999999 * Math.random()),
+      settings: {
+        menuItems: this.menuItemsMap
+          .map(i => {
+            return {
+              'action': NodeMenuItemAction.Custom,
+              'name': i.value,
+              'cssClass': '',
+            }
+          }),
+      },
+    };
+
+    if (!modelContent.children || modelContent.children.length <= 0)
+      return newTreeModel;
+    else {
+      newTreeModel.children = [];
+      modelContent.children.forEach(child => {
+        newTreeModel.children.push(self.deserializeTreeModel(child));
+      });
+      return newTreeModel
+    }
+
+  }
+
   updateModel(): void {
     const self = this;
 
@@ -172,29 +227,9 @@ export class TreeComponent implements OnInit, OnDestroy {
 
     self.modelService.updateModel(self.appId, modelContent.name, modelContent)
       .subscribe(result => {
-        const toast: Toast = {
-          type: 'success',
-          title: 'Success',
-          body: 'Successfully updated',
-          timeout: 0,
-          showCloseButton: true,
-          bodyOutputType: BodyOutputType.TrustedHtml,
-        };
-        this.toasterService.popAsync(toast);
-
-
+        self.popToast('success', 'Success', 'Successfully updated')
       }, error => {
-        const toast: Toast = {
-          type: 'error',
-          title: 'Oops! Error',
-          body: 'Failed to update: ' + JSON.parse(error).error,
-          timeout: 0,
-          showCloseButton: true,
-          bodyOutputType: BodyOutputType.TrustedHtml,
-        };
-        this.toasterService.popAsync(toast);
-
-
+        self.popToast('error', 'Oops! Error', 'Failed to update: ' + JSON.parse(error).error)
       })
   }
 
