@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { ToasterService, Toast, ToasterConfig, BodyOutputType } from 'angular2-toaster';
 
-import { ModelService } from '../../../services/cms-services/model.service';
+import { ModelService, ModelContent } from '../../../services/cms-services/model.service';
 import 'style-loader!angular2-toaster/toaster.css';
 
 @Component({
@@ -30,7 +30,7 @@ export class TreeComponent implements OnInit, OnDestroy {
   ]
 
   private tree: TreeModel;
-
+  private rootNodeId: number;
 
   public toasterConfig: ToasterConfig;
   constructor(
@@ -53,36 +53,17 @@ export class TreeComponent implements OnInit, OnDestroy {
         }
       })
 
+    self.rootNodeId = Math.floor(99999999999 * Math.random())
+
     self.tree = {
       settings: {
         'rightMenu': true,
         menuItems: menuItems,
       },
-      value: 'Programming languages by programming paradigm',
+      value: 'New Object',
       type: 'object',
-      id: 0,
-      children: [{
-        value: 'Object-oriented programming',
-        id: 1,
-        children: [{
-          value: 'Java', type: 'string', id: 11,
-        }, {
-          value: 'C++', type: 'string', id: 12,
-        }, {
-          value: 'C#', type: 'string', id: 13,
-        }],
-      }, {
-        value: 'Prototype-based programming',
-        type: 'object',
-        id: 2,
-        children: [{
-          value: 'JavaScript', type: 'string', id: 21,
-        }, {
-          value: 'CoffeeScript', type: 'string', id: 22,
-        }, {
-          value: 'Lua', type: 'string', id: 23,
-        }],
-      }],
+      id: self.rootNodeId,
+      children: [],
     };
 
     self.sub = self.route.params.subscribe(params => {
@@ -161,6 +142,33 @@ export class TreeComponent implements OnInit, OnDestroy {
         },
       );
     }
+  }
+
+  serializeTreeModel(treeModel: TreeModel): ModelContent {
+    const self = this;
+    const newModelContent: ModelContent = {
+      type: treeModel.type,
+      name: treeModel.value.toString(),
+    };
+
+    if (!treeModel.children || treeModel.children.length <= 0)
+      return newModelContent;
+    else {
+      newModelContent.children = [];
+      treeModel.children.forEach(child => {
+        newModelContent.children.push(self.serializeTreeModel(child));
+      });
+      return newModelContent
+    }
+
+  }
+
+  updateModel(): void {
+    const self = this;
+
+    const rootNodeController = self.treeComponent.getControllerByNodeId(self.rootNodeId);
+    const treeModel = rootNodeController.toTreeModel();
+    // const modelContent = self.serializeTreeModel(treeModel);
   }
 
   ngOnDestroy(): void {
