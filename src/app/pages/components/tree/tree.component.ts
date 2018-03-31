@@ -168,7 +168,34 @@ export class TreeComponent implements OnInit, OnDestroy {
 
     const rootNodeController = self.treeComponent.getControllerByNodeId(self.rootNodeId);
     const treeModel = rootNodeController.toTreeModel();
-    // const modelContent = self.serializeTreeModel(treeModel);
+    const modelContent = self.serializeTreeModel(treeModel);
+
+    self.modelService.updateModel(self.appId, modelContent.name, modelContent)
+      .subscribe(result => {
+        const toast: Toast = {
+          type: 'success',
+          title: 'Success',
+          body: 'Successfully updated',
+          timeout: 0,
+          showCloseButton: true,
+          bodyOutputType: BodyOutputType.TrustedHtml,
+        };
+        this.toasterService.popAsync(toast);
+
+
+      }, error => {
+        const toast: Toast = {
+          type: 'error',
+          title: 'Oops! Error',
+          body: 'Failed to update: ' + JSON.parse(error).error,
+          timeout: 0,
+          showCloseButton: true,
+          bodyOutputType: BodyOutputType.TrustedHtml,
+        };
+        this.toasterService.popAsync(toast);
+
+
+      })
   }
 
   ngOnDestroy(): void {
