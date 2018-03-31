@@ -144,7 +144,7 @@ export class TreeComponent implements OnInit, OnDestroy {
       const childNode: TreeModel = {
         'value': 'name here',
         'type': actionItem.type,
-        'id' : Math.floor(99999999999 * Math.random()),
+        'id': Math.floor(99999999999 * Math.random()),
         settings: {
           'rightMenu': true,
           menuItems: menuItems,
@@ -154,7 +154,12 @@ export class TreeComponent implements OnInit, OnDestroy {
       if (actionItem.type === 'object')
         childNode.children = []
 
-      nodeController.addChild(childNode);
+      nodeController.addChildAsync(childNode).then(
+        n => {
+          const newNodeController = self.treeComponent.getControllerByNodeId(n.node.id);
+          newNodeController.startRenaming();
+        },
+      );
     }
   }
 

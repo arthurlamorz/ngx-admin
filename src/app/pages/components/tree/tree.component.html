@@ -4,11 +4,11 @@
     <nb-card>
       <nb-card-header>Tree</nb-card-header>
       <nb-card-body>
-        <tree [tree]="tree" (menuItemSelected)="onMenuItemSelected($event)"  #treeComponent>
+        <tree [tree]="tree" (menuItemSelected)="onMenuItemSelected($event)" (nodeCreated)="handleCreateNode($event)" #treeComponent>
           <ng-template let-node>
             <i>{{node.type}} :</i>
             <span class="node-name" [innerHTML]="node.value"></span>
-        </ng-template>
+          </ng-template>
         </tree>
       </nb-card-body>
     </nb-card>
