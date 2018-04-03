@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { TreeModel, NodeMenuItemAction } from 'ng2-tree';
+import { TreeModel, NodeMenuItemAction, Ng2TreeSettings } from 'ng2-tree';
 import { ActivatedRoute } from '@angular/router';
 
 import { ToasterService, Toast, ToasterConfig, BodyOutputType } from 'angular2-toaster';
@@ -32,6 +32,10 @@ export class TreeComponent implements OnInit, OnDestroy {
 
   private tree: TreeModel;
   private rootNodeId: number;
+
+  public treeSettings: Ng2TreeSettings = {
+    rootIsVisible: false,
+  };
 
   public toasterConfig: ToasterConfig;
   constructor(
