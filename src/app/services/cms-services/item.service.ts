@@ -4,13 +4,13 @@ import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 
-export interface ItemList {
+export class ItemList {
     version: number;
     items: Item[];
 }
 
-export interface Item {
-    ItemKey: string,
+export class Item {
+    ItemKey: string;
     ItemContent: any
 }
 
