@@ -114,12 +114,12 @@ export class TreeComponent implements OnInit, OnDestroy {
     const self = this;
     if (!model)
       self.popToast('error', 'Error when change model', 'Model not found')
-      var rootNodeController = self.treeComponent.getControllerByNodeId(self.rootNodeId);
+      let rootNodeController = self.treeComponent.getControllerByNodeId(self.rootNodeId);
       rootNodeController.setChildren([]);
 
     self.modelService.getModel(self.appId, model)
       .subscribe(m => {
-        var rootNodeController = self.treeComponent.getControllerByNodeId(self.rootNodeId);
+        rootNodeController = self.treeComponent.getControllerByNodeId(self.rootNodeId);
         rootNodeController.addChild(self.deserializeTreeModel(m.model));
       },
         error => {
