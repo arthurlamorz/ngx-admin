@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ToasterService, Toast, ToasterConfig, BodyOutputType } from 'angular2-toaster';
-import { ItemService, ItemList, Item } from '../../../services/cms-services/item.service'
+import { ItemService, Item } from '../../../services/cms-services/item.service'
 
 import 'style-loader!angular2-toaster/toaster.css';
 
@@ -35,7 +35,7 @@ export class UpdateItemComponent implements OnInit, OnDestroy {
     private itemService: ItemService,
     private toasterService: ToasterService,
   ) {
-   
+
   }
 
   ngOnInit(): void {
@@ -69,10 +69,10 @@ export class UpdateItemComponent implements OnInit, OnDestroy {
               bodyOutputType: BodyOutputType.TrustedHtml,
             };
             this.toasterService.popAsync(toast);
-    
+
           });
-    
+
   }
 
-  
+
 }

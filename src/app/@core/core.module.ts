@@ -60,7 +60,7 @@ export class CoreModule {
         AppListService,
         LanguageService,
         ModelService,
-        ItemService
+        ItemService,
       ],
     };
   }
