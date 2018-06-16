@@ -3,8 +3,8 @@
   <div class="col-md-12">
     <nb-card>
       <nb-card-header>Tree</nb-card-header>
-      <nb-card-body>
-        <div class="dropdown" ngbDropdown>
+      <nb-card-body class="nb-card-tree-page">
+        <div class="dropdown dropdown-normal" ngbDropdown>
           <button class="btn btn-primary" type="button" ngbDropdownToggle>
             Models
           </button>
@@ -13,7 +13,7 @@
           </ul>
         </div>
 
-        <tree [tree]="tree" (menuItemSelected)="onMenuItemSelected($event)" (nodeCreated)="handleCreateNode($event)" #treeComponent>
+        <tree [tree]="tree" (menuItemSelected)="onMenuItemSelected($event)" #treeComponent>
           <ng-template let-node>
             <i>{{node.type}} :</i>
             <span class="node-name" [innerHTML]="node.value"></span>
