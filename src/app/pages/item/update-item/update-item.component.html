@@ -1,0 +1,40 @@
+<toaster-container [toasterconfig]="toasterConfig"></toaster-container>
+<div class="row">
+  <div class="col-md-10">
+    <nb-card>
+      <nb-card-header>Create an app project</nb-card-header>
+      <nb-card-body>
+        <form (ngSubmit)="onSubmit()" >
+          <div class="form-group row">
+            <label for="appId" class="col-sm-3 col-form-label">App ID</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="appId" [(ngModel)]="appId" [ngModelOptions]="{standalone: true}" placeholder="Unique ID of the app">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="modelName" class="col-sm-3 col-form-label">Item Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="appName" [(ngModel)]="modelName" [ngModelOptions]="{standalone: true}" placeholder="Name of the app">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="itemKey" class="col-sm-3 col-form-label">Item Key</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="abstract" [(ngModel)]="itemKey" [ngModelOptions]="{standalone: true}" placeholder="Abstract (short description) of the app">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="item" class="col-sm-3 col-form-label">Item Details(JSON)</label>
+            <div class="col-sm-9">
+              <textarea rows="5" placeholder="Item Details in JSON" [(ngModel)]="item" [ngModelOptions]="{standalone: true}"  class="form-control"></textarea>
+            </div>
+          </div>
+        
+          <div class="form-group row">
+            <div class="offset-sm-3 col-sm-9">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </div>
+        </form>
+      </nb-card-body>
+    </nb-card>

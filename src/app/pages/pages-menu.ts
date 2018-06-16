@@ -22,6 +22,16 @@ export const MENU_ITEMS: NbMenuItem[] = [
     ],
   },
   {
+    title: 'Items',
+    icon: 'nb-layout-default',
+    children: [
+      {
+        title: 'Create/Update Item',
+        link: '/pages/item/update-item',
+      },
+    ],
+  },
+  {
     title: 'Language',
     icon: 'nb-tables',
     children: [

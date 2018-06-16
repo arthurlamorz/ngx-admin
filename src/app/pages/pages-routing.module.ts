@@ -22,7 +22,12 @@ const routes: Routes = [{
   {
     path: 'languages',
     loadChildren: './languages/languages.module#LanguagesModule',
-  }, {
+  }, 
+  {
+    path: 'item',
+    loadChildren: './item/item.module#ItemModule',
+  },
+  {
     path: 'components',
     loadChildren: './components/components.module#ComponentsModule',
   }, {

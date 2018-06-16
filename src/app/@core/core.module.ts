@@ -12,6 +12,8 @@ import { UserRegistrationService } from '../services/cognito-services/user-regis
 import { CognitoAuthInterceptor } from '../services/interceptors/cognito.http.interceptor';
 import { AppListService } from '../services/cms-services/app-list.service';
 import { LanguageService } from '../services/cms-services/language.service';
+import { ModelService } from '../services/cms-services/model.service';
+import { ItemService } from '../services/cms-services/item.service';
 
 const NB_CORE_PROVIDERS = [
   ...DataModule.forRoot().providers,
@@ -57,6 +59,8 @@ export class CoreModule {
         CognitoAuthInterceptor,
         AppListService,
         LanguageService,
+        ModelService,
+        ItemService
       ],
     };
   }
