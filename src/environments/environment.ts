@@ -26,4 +26,5 @@ export const environment = {
   service_cms_endpoint: 'cmsdev',
   service_language_endpoint: 'languagedev',
   service_model_resource: 'model',
+  service_item_resource: 'item',
 };
